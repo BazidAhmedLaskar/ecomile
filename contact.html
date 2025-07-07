@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - EcoMiles</title>
+    <meta name="description" content="Get in touch with the EcoMiles team for feedback, questions, or support regarding sustainable transportation tracking.">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1><a href="index.html" style="text-decoration: none; color: inherit;">🌱 EcoMiles</a></h1>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html" class="login-btn">Login</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div style="text-align: center; margin: 40px 0;">
+                <h2 style="color: #333; margin-bottom: 20px;">📧 Contact Us</h2>
+                <p style="color: #666; font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                    Have feedback, questions, or suggestions? We'd love to hear from you!
+                </p>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="form-container">
+                <h3 style="text-align: center; color: #28a745; margin-bottom: 30px;">Send us a Message</h3>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">Your Name</label>
+                        <input type="text" id="contactName" required placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address</label>
+                        <input type="email" id="contactEmail" required placeholder="Enter your email address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactSubject">Subject</label>
+                        <select id="contactSubject" required>
+                            <option value="">Choose a topic</option>
+                            <option value="feedback">General Feedback</option>
+                            <option value="bug">Report a Bug</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="support">Technical Support</option>
+                            <option value="partnership">Partnership Inquiry</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" rows="6" required 
+                                  placeholder="Tell us about your feedback, question, or concern..."></textarea>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="contactConsent" required>
+                            <span style="font-size: 0.9rem; color: #666;">
+                                I agree to be contacted regarding my message and understand my data will be handled according to the privacy policy.
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="width: 100%;">
+                        Send Message
+                    </button>
+                </form>
+                
+                <div id="contactSuccess" style="display: none; background: #d4edda; color: #155724; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                    <h4 style="margin-bottom: 10px;">Message Sent Successfully!</h4>
+                    <p style="margin: 0;">Thank you for your feedback. We'll get back to you as soon as possible.</p>
+                </div>
+                
+                <div id="contactError" style="display: none; background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                    <h4 style="margin-bottom: 10px;">Message Failed to Send</h4>
+                    <p style="margin: 0;">Please try again or contact us directly via email.</p>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 60px 0;">
+                <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">👨‍💻</div>
+                    <h3 style="color: #333; margin-bottom: 15px;">Developer</h3>
+                    <p style="color: #666; margin-bottom: 10px;"><strong>Bazid Laskar</strong></p>
+                    <p style="color: #666; margin-bottom: 10px;">Class 9 Student</p>
+                    <p style="color: #666; font-size: 0.9rem;">Passionate about technology and environmental sustainability</p>
+                </div>
+                
+                <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">🌱</div>
+                    <h3 style="color: #333; margin-bottom: 15px;">Project Purpose</h3>
+                    <p style="color: #666; margin-bottom: 10px;">Student Innovation Project</p>
+                    <p style="color: #666; margin-bottom: 10px;">Science Fair Submission</p>
+                    <p style="color: #666; font-size: 0.9rem;">Promoting sustainable transportation through gamification</p>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div style="background: #f8f9fa; padding: 40px; border-radius: 16px; margin: 40px 0;">
+                <h3 style="text-align: center; color: #333; margin-bottom: 40px;">Frequently Asked Questions</h3>
+                
+                <div style="display: grid; gap: 25px;">
+                    <div style="background: white; padding: 25px; border-radius: 12px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">How does the GPS tracking work?</h4>
+                        <p style="color: #666; line-height: 1.6;">EcoMiles uses your browser's built-in geolocation API to track your journey. We calculate the distance using the Haversine formula and don't store your exact location data.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">Is my data secure?</h4>
+                        <p style="color: #666; line-height: 1.6;">Yes! We use Firebase Authentication for secure login and Firestore for encrypted data storage. Your personal information is never shared with third parties.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">How are road tax deductions calculated?</h4>
+                        <p style="color: #666; line-height: 1.6;">The road tax deduction is calculated as ₹1 for every 10 EcoPoints earned. This is a simulation for demonstration purposes in the current version.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">Can I use EcoMiles offline?</h4>
+                        <p style="color: #666; line-height: 1.6;">EcoMiles requires an internet connection for data synchronization and authentication. However, GPS tracking can work in areas with poor connectivity.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">What browsers are supported?</h4>
+                        <p style="color: #666; line-height: 1.6;">EcoMiles works on all modern browsers including Chrome, Firefox, Safari, and Edge. GPS tracking requires location permissions to be enabled.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Resources -->
+            <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: 40px 0;">
+                <h3 style="text-align: center; color: #333; margin-bottom: 30px;">Support Resources</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">📖</div>
+                        <h4 style="color: #333; margin-bottom: 10px;">How It Works</h4>
+                        <p style="color: #666; margin-bottom: 15px;">Learn about EcoMiles features and technology</p>
+                        <a href="how-it-works.html" class="btn-secondary" style="text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">
+                            Read Guide
+                        </a>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🚀</div>
+                        <h4 style="color: #333; margin-bottom: 10px;">Quick Start</h4>
+                        <p style="color: #666; margin-bottom: 15px;">Get started with your first journey</p>
+                        <a href="login.html" class="btn-primary" style="text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">
+                            Start Now
+                        </a>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🏆</div>
+                        <h4 style="color: #333; margin-bottom: 10px;">Leaderboard</h4>
+                        <p style="color: #666; margin-bottom: 15px;">See how others are contributing</p>
+                        <a href="leaderboard.html" class="btn-secondary" style="text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">
+                            View Rankings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EcoMiles. Made by Bazid Laskar, Class 9.</p>
+            <div class="footer-links">
+                <a href="how-it-works.html">How it Works</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            const successDiv = document.getElementById('contactSuccess');
+            const errorDiv = document.getElementById('contactError');
+            
+            // Hide previous messages
+            successDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending Message...';
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                subject: document.getElementById('contactSubject').value,
+                message: document.getElementById('contactMessage').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Simulate form submission (in a real app, this would send to a server)
+            setTimeout(() => {
+                try {
+                    // Store in localStorage for demonstration
+                    const existingMessages = JSON.parse(localStorage.getItem('ecomiles_contact_messages') || '[]');
+                    existingMessages.push(formData);
+                    localStorage.setItem('ecomiles_contact_messages', JSON.stringify(existingMessages));
+                    
+                    // Show success
+                    successDiv.style.display = 'block';
+                    
+                    // Reset form
+                    e.target.reset();
+                    
+                    // Scroll to success message
+                    successDiv.scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    console.error('Error saving contact message:', error);
+                    errorDiv.style.display = 'block';
+                }
+                
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

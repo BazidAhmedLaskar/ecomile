@@ -1,0 +1,258 @@
+Encourage people to:
+
+Walk, cycle, carpool, or use public transport
+
+Reduce pollution and fuel usage
+
+Earn points for each eco-friendly journey
+
+Get recognition & road tax benefits
+
+Your app motivates people by rewarding good travel behavior.
+
+✅ KEY FEATURES (With Real-World Tech Stack)
+Feature	Technology Used
+User Sign-in (Google only)	Firebase Authentication
+Journey Tracker	Manual Input & GPS Tracking
+EcoPoints System	JS logic (distance × travel mode)
+Leaderboard & Profile	Stored in LocalStorage / Firebase (optional)
+Road Tax Reduction	Calculated from points
+Hosting	Netlify (free)
+Backend (Optional)	Firebase Firestore or Render (free tier)
+
+📂 FOLDER STRUCTURE (Static Frontend)
+pgsql
+Copy
+Edit
+ecomiles-frontend/
+│
+├── index.html               → Home page
+├── login.html               → Google sign-in
+├── dashboard.html           → Points, CO2 saved, road tax saved
+├── journey.html             → Add journey manually or via GPS
+├── leaderboard.html         → View top users
+├── rewards.html             → Earned badges & tax deduction
+├── profile.html             → View own profile
+├── how-it-works.html        → Science + tech explanation
+├── contact.html             → Feedback form
+├── 404.html                 → Error page
+│
+├── /css/styles.css          → Styling
+├── /js/                     → JS scripts for each page
+│   ├── firebase-config.js   → Firebase app config
+│   ├── auth.js              → Google Sign-in logic
+│   ├── dashboard.js         → Load user stats
+│   ├── journey.js           → Add and save journeys
+│   ├── gps-utils.js         → GPS-based distance tracking
+│   └── rewards.js           → Badge and tax logic
+🔓 LOGIN SYSTEM (Google Sign-In Only)
+Users cannot sign up manually
+
+On login.html, they click "Sign in with Google"
+
+Firebase Authentication popup opens
+
+Once authenticated:
+
+You store user's name, email, UID, and photo in localStorage
+
+Then redirect to dashboard.html
+
+This makes your app secure, fast, and professional.
+
+📜 PAGE-WISE FULL EXPLANATION
+1. index.html – Home Page
+Purpose: Introduce EcoMiles
+
+Includes:
+
+App Logo + Tagline
+
+Summary of features:
+
+🚶 Walk & Cycle
+
+🚌 Use public transport
+
+🎯 Earn points
+
+🏅 Get rewards
+
+🧾 Save on road tax
+
+CTA Button → “Login with Google”
+
+2. login.html – Google Authentication
+Includes:
+
+Firebase scripts
+
+Google Sign-in button
+
+If login successful → redirect to dashboard.html
+
+If already logged in → skip to dashboard directly
+
+3. dashboard.html – Main Panel
+Includes:
+
+Welcome message: “Hi, [Name] 👋”
+
+Cards showing:
+
+✅ Total EcoPoints
+
+🌍 Total CO₂ saved
+
+📏 Total distance
+
+💰 Road Tax Saved
+
+Graph (optional): Weekly performance chart
+
+Buttons:
+
+➕ Add Journey
+
+🏆 View Leaderboard
+
+🎖️ View Rewards
+
+🚪 Logout
+
+4. journey.html – Track a Trip
+Option A: Manual Entry
+Dropdown to select travel mode:
+
+Walk / Cycle / Bus / Carpool
+
+Enter distance in km
+
+Submit = points calculated
+
+Option B: GPS Tracking
+“Start Journey” → starts GPS location tracking
+
+“Stop Journey” → calculates total distance
+
+Then asks for travel mode
+
+Points are given based on this
+
+Backend or LocalStorage saves journey like:
+
+json
+Copy
+Edit
+{
+  "mode": "cycle",
+  "distance": 3.5,
+  "points": 28
+}
+5. leaderboard.html – Top Users
+Content:
+
+Table of top 10 users by points
+
+Shows:
+
+🥇 Rank
+
+👤 Name
+
+🌱 Points
+
+📏 Distance
+
+Your own row highlighted
+
+Can be loaded from Firebase or just shown from demo data for exhibition.
+
+6. profile.html – User Info
+Content:
+
+Profile picture
+
+Name + Email
+
+Total journeys
+
+Points
+
+Last 5 journeys
+
+Logout button
+
+7. rewards.html – Badges & Road Tax Deduction
+Badge	Required Points	Tax Deduction
+Eco Starter	100	₹10
+Eco Warrior	500	₹50
+Green Hero	1000	₹100
+
+🔢 Road Tax Formula:
+java
+Copy
+Edit
+Road Tax Deduction = EcoPoints × ₹0.1
+So 250 points = ₹25 saved
+
+You show: “You've earned ₹25 off your road tax!”
+
+Just simulation – no real tax change, but judges will love the idea!
+
+8. how-it-works.html – Science & Tech Explanation
+Content:
+
+Real-world problem: Traffic, pollution, CO₂, fuel waste
+
+App solution: EcoMiles
+
+Tech stack:
+
+GPS
+
+Firebase Auth
+
+JS logic
+
+Road tax simulation
+
+Includes:
+
+Flowchart of how the app works
+
+Infographics (optional)
+
+“Made by Bazid Laskar, Class 9”
+
+9. contact.html – Feedback Form
+Fields:
+
+Name
+
+Email
+
+Message
+
+Submit button (can show popup like “Submitted!”)
+
+10. 404.html – Error Page
+Friendly message:
+
+“Oops! Page not found. Go back to Home.”
+
+🧮 EcoPoints Table
+Mode	Points per km
+🚶 Walk	10
+🚴 Cycle	8
+🚌 Bus	5
+🚘 Carpool	3
+🚗 Private	0
+
+💼 Project Deployment
+Task	Platform	Notes
+Frontend hosting	Netlify	Free, drag & drop
+Auth	Firebase	Google login only
+Data storage	LocalStorage or Firestore	Optional (Firestore is best)
+GPS	JS Geolocation API	For mobile journey tracking
+
