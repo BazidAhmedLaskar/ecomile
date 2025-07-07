@@ -1,0 +1,106 @@
+<!-- Folder Structure: ecomiles-frontend/ -->
+
+<!-- Files in Root Folder -->
+index.html
+login.html
+dashboard.html
+journey.html
+leaderboard.html
+rewards.html
+profile.html
+how-it-works.html
+contact.html
+404.html
+
+<!-- Assets -->
+css/styles.css
+js/login.js
+js/dashboard.js
+js/journey.js
+js/firebase-config.js
+
+<!-- External Scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Summary of Key Features -->
+
+1. login.html (Google Login Only)
+- Firebase Auth popup
+- On success: store user data in localStorage
+- Redirect to dashboard.html
+
+2. dashboard.html
+- Welcome message with name & photo
+- Display:
+  - Total EcoPoints
+  - Total Distance Traveled
+  - CO2 Saved (1 km = 0.21 kg)
+  - Road Tax Deduction (₹1 per 10 points)
+- Graph: Weekly EcoPoints (Chart.js)
+- Buttons to journey, rewards, leaderboard
+
+3. journey.html
+- Manual Input:
+  - Select Mode (walk, cycle, bus, carpool)
+  - Enter Distance
+- Optional GPS Tracking:
+  - Start / Stop journey (geolocation)
+  - Calculate distance using Haversine formula
+- On submit:
+  - Calculate points (mode multiplier)
+  - Update Firestore with journey record
+  - Update user stats (points, distance)
+
+4. leaderboard.html
+- Fetch top 10 users by EcoPoints from Firestore
+- Highlight current user
+
+5. rewards.html
+- Show unlocked badges (based on point milestones)
+- Road tax deduction = ₹1 per 10 points (display)
+- Show "You’ve saved ₹___ on tax!"
+
+6. profile.html
+- Show user info
+- Total journeys
+- Button: View journey history (optional modal)
+- Logout button (clear localStorage)
+
+7. how-it-works.html
+- Explain pollution problem, EcoMiles logic
+- Manual vs GPS journey tracking
+- Flowchart of system
+- Tech used: Firebase + Netlify
+
+8. contact.html
+- Form: Name, email, message
+- Use Google Form as endpoint or fake-submit for science fair
+
+9. 404.html
+- Friendly error message
+
+
+<!-- FIREBASE CONFIG (js/firebase-config.js) -->
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+
+<!-- STORAGE FORMAT -->
+/users/{uid}:
+{
+  name, email, photoURL, points, totalDistance, roadTaxSaved, journeys: []
+}
+
+/journeys/{doc}:
+{
+  userId, mode, distance, points, timestamp
+}
