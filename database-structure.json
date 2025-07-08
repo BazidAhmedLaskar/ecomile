@@ -1,0 +1,158 @@
+{
+  "collections": {
+    "users": {
+      "description": "User profiles and statistics",
+      "document_id": "Firebase Auth UID",
+      "fields": {
+        "name": "string - User's display name",
+        "email": "string - User's email address", 
+        "photoURL": "string - Profile picture URL",
+        "points": "number - Total EcoPoints earned",
+        "totalDistance": "number - Total distance traveled (km)",
+        "roadTaxSaved": "number - Tax savings in rupees",
+        "createdAt": "timestamp - Account creation date"
+      },
+      "sample_document": {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "photoURL": "https://example.com/photo.jpg",
+        "points": 150,
+        "totalDistance": 25.5,
+        "roadTaxSaved": 15.0,
+        "createdAt": "2025-01-08T00:00:00Z"
+      }
+    },
+    
+    "journeys": {
+      "description": "Individual trip records",
+      "document_id": "Auto-generated",
+      "fields": {
+        "userId": "string - Reference to user document",
+        "mode": "string - walking|cycling|bus|car",
+        "distance": "number - Trip distance in km",
+        "points": "number - Points earned for this trip",
+        "co2Saved": "number - CO2 savings in kg",
+        "notes": "string - Optional trip notes",
+        "type": "string - manual|gps|qr_vehicle",
+        "startLocation": "object - {lat, lon}",
+        "endLocation": "object - {lat, lon}",
+        "vehicleId": "string - Vehicle ID if using QR scanner",
+        "duration": "number - Trip duration in milliseconds",
+        "averageSpeed": "number - Average speed in km/h",
+        "positions": "array - GPS coordinate array for route",
+        "timestamp": "timestamp - Trip completion time"
+      },
+      "sample_document": {
+        "userId": "user123",
+        "mode": "bus",
+        "distance": 12.3,
+        "points": 62,
+        "co2Saved": 2.583,
+        "notes": "Commute to work",
+        "type": "qr_vehicle",
+        "startLocation": {
+          "lat": 40.7128,
+          "lon": -74.0060
+        },
+        "endLocation": {
+          "lat": 40.7589,
+          "lon": -73.9851
+        },
+        "vehicleId": "BUS001",
+        "duration": 1800000,
+        "averageSpeed": 24.6,
+        "timestamp": "2025-01-08T08:30:00Z"
+      }
+    },
+    
+    "vehicles": {
+      "description": "Public transport vehicles",
+      "document_id": "Vehicle ID (e.g., BUS001)",
+      "fields": {
+        "vehicleId": "string - Unique vehicle identifier",
+        "route": "string - Route description",
+        "type": "string - bus|train|metro|van",
+        "status": "string - active|inactive|maintenance",
+        "driverId": "string - Reference to driver user ID",
+        "passengers": "array - Current passenger user IDs",
+        "currentLocation": "object - {lat, lon, timestamp}",
+        "speed": "number - Current speed in km/h",
+        "sharedLocation": "object - Last shared location",
+        "lastUpdated": "timestamp - Last status update",
+        "createdAt": "timestamp - Vehicle registration date"
+      },
+      "sample_document": {
+        "vehicleId": "BUS001",
+        "route": "City Center - Airport",
+        "type": "bus",
+        "status": "active",
+        "driverId": "driver123",
+        "passengers": ["user123", "user456"],
+        "currentLocation": {
+          "lat": 40.7128,
+          "lon": -74.0060,
+          "timestamp": "2025-01-08T09:15:00Z"
+        },
+        "speed": 35,
+        "sharedLocation": {
+          "lat": 40.7128,
+          "lon": -74.0060,
+          "timestamp": "2025-01-08T09:15:00Z"
+        },
+        "lastUpdated": "2025-01-08T09:15:00Z",
+        "createdAt": "2025-01-08T00:00:00Z"
+      }
+    },
+    
+    "drivers": {
+      "description": "Driver authorization and vehicle assignments",
+      "document_id": "Firebase Auth UID of driver",
+      "fields": {
+        "vehicleId": "string - Assigned vehicle ID",
+        "route": "string - Assigned route",
+        "vehicleType": "string - Type of vehicle driven",
+        "driverName": "string - Driver's name",
+        "driverEmail": "string - Driver's email",
+        "licenseNumber": "string - Optional license number",
+        "phoneNumber": "string - Contact number",
+        "isActive": "boolean - Driver active status",
+        "createdAt": "timestamp - Driver registration date"
+      },
+      "sample_document": {
+        "vehicleId": "BUS001",
+        "route": "City Center - Airport",
+        "vehicleType": "bus",
+        "driverName": "Mike Johnson",
+        "driverEmail": "mike@transport.com",
+        "licenseNumber": "DL123456789",
+        "phoneNumber": "+1234567890",
+        "isActive": true,
+        "createdAt": "2025-01-08T00:00:00Z"
+      }
+    }
+  },
+  
+  "indexes": {
+    "journeys": [
+      {
+        "fields": ["userId", "timestamp"],
+        "order": "descending"
+      },
+      {
+        "fields": ["mode", "timestamp"],
+        "order": "descending"
+      }
+    ],
+    "vehicles": [
+      {
+        "fields": ["status", "lastUpdated"],
+        "order": "descending"
+      }
+    ]
+  },
+  
+  "security_rules": {
+    "description": "Copy this to Firestore Rules tab",
+    "rules": "rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /users/{userId} {\n      allow read, write: if request.auth != null && request.auth.uid == userId;\n    }\n    match /journeys/{journeyId} {\n      allow read, write: if request.auth != null && \n        (request.auth.uid == resource.data.userId || \n         request.auth.uid == request.resource.data.userId);\n    }\n    match /vehicles/{vehicleId} {\n      allow read: if request.auth != null;\n      allow write: if request.auth != null && \n        (request.auth.uid == resource.data.driverId || \n         request.auth.uid == request.resource.data.driverId);\n    }\n    match /drivers/{driverId} {\n      allow read, write: if request.auth != null && request.auth.uid == driverId;\n    }\n  }\n}"
+  }
+}
