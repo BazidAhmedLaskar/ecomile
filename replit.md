@@ -25,16 +25,23 @@ EcoMiles is a frontend-only web application that tracks and gamifies sustainable
 2. **Authentication** (`login.html`) - Google login integration with Firebase Auth
 3. **Dashboard** (`dashboard.html`) - Main user interface with metrics, charts, and recent journeys
 4. **Journey Tracking** (`journey.html`) - Manual entry and GPS-based trip logging with real-time tracking
-5. **Leaderboard** (`leaderboard.html`) - User ranking system with top 3 podium and full table
-6. **Rewards** (`rewards.html`) - Achievement badges and road tax deduction calculator
-7. **Profile** (`profile.html`) - User account management with journey history and data export
-8. **Information Pages** (`how-it-works.html`, `contact.html`, `404.html`) - Support content and error handling
+5. **Real-time Map** (`realtime-map.html`) - Live GPS tracking with speed verification and route visualization
+6. **QR Scanner** (`qr-scanner.html`) - QR code scanning for public transport check-in with passenger tracking
+7. **Driver Dashboard** (`driver-dashboard.html`) - Vehicle management interface for drivers with real-time passenger monitoring
+8. **Leaderboard** (`leaderboard.html`) - User ranking system with top 3 podium and full table
+9. **Rewards** (`rewards.html`) - Achievement badges and road tax deduction calculator
+10. **Profile** (`profile.html`) - User account management with journey history and data export
+11. **Setup Demo Data** (`setup-demo-data.html`) - Driver account creation and vehicle configuration
+12. **Information Pages** (`how-it-works.html`, `contact.html`, `404.html`) - Support content and error handling
 
 ### JavaScript Modules
 - **Firebase Configuration** (`js/firebase-config.js`) - Authentication and Firestore setup with error handling
 - **Login Handler** (`js/login.js`) - Authentication flow management with popup handling
 - **Dashboard Controller** (`js/dashboard.js`) - Metrics calculation, Chart.js integration, and recent journeys
 - **Journey Controller** (`js/journey.js`) - Trip logging with GPS tracking using Haversine formula
+- **QR Scanner** (`js/qr-scanner.js`) - QR code scanning, vehicle check-in, and passenger management
+- **Driver Dashboard** (`js/driver-dashboard.js`) - Vehicle status monitoring, passenger tracking, and QR code generation
+- **Real-time Map** (`js/realtime-map.js`) - Live GPS tracking with speed verification and route visualization
 
 ### Styling
 - **CSS Framework**: Custom CSS (`css/styles.css`) with comprehensive component library
@@ -149,6 +156,10 @@ EcoMiles is a frontend-only web application that tracks and gamifies sustainable
 - July 07, 2025: Integrated Chart.js for weekly progress visualization
 - July 07, 2025: Created comprehensive badge system with tax deduction rewards
 - July 07, 2025: Implemented profile management with data export and journey history
+- July 08, 2025: Added QR code scanning system for public transport check-in and passenger tracking
+- July 08, 2025: Implemented driver dashboard with real-time passenger monitoring and vehicle management
+- July 08, 2025: Created real-time map tracking with speed verification and route visualization
+- July 08, 2025: Integrated vehicle-passenger authentication system with GPS verification
 
 ## User Preferences
 

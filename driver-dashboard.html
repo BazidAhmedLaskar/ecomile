@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - EcoMiles</title>
+    <meta name="description" content="Driver dashboard to monitor passengers and vehicle status">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>🚌 Driver Dashboard</h1>
+                </div>
+                <div class="nav-links">
+                    <button onclick="logout()" class="login-btn">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="driver-dashboard">
+                <div class="vehicle-status-card">
+                    <h2>🚐 Vehicle Status</h2>
+                    <div class="vehicle-info">
+                        <div class="status-item">
+                            <label>Vehicle ID:</label>
+                            <span id="driverVehicleId">BUS001</span>
+                        </div>
+                        <div class="status-item">
+                            <label>Route:</label>
+                            <span id="driverRoute">City Center - Airport</span>
+                        </div>
+                        <div class="status-item">
+                            <label>Status:</label>
+                            <span id="vehicleStatus" class="status-active">Active</span>
+                        </div>
+                        <div class="status-item">
+                            <label>Speed:</label>
+                            <span id="vehicleSpeed">0 km/h</span>
+                        </div>
+                    </div>
+                    <div class="vehicle-controls">
+                        <button id="startServiceBtn" class="btn-primary">Start Service</button>
+                        <button id="stopServiceBtn" class="btn-secondary" style="display: none;">Stop Service</button>
+                        <button id="showQRBtn" class="btn-primary">Show QR Code</button>
+                    </div>
+                </div>
+
+                <div class="passengers-section">
+                    <div class="passengers-header">
+                        <h3>👥 Current Passengers</h3>
+                        <span class="passenger-count">Count: <span id="passengerCount">0</span></span>
+                    </div>
+                    <div class="passengers-list" id="passengersList">
+                        <div class="no-passengers">No passengers currently on board</div>
+                    </div>
+                </div>
+
+                <div class="map-section">
+                    <h3>🗺️ Real-time Location</h3>
+                    <div id="driverMap" class="driver-map"></div>
+                    <div class="map-controls">
+                        <button id="centerMapBtn" class="btn-secondary">Center Map</button>
+                        <button id="shareLocationBtn" class="btn-primary">Share Location</button>
+                    </div>
+                </div>
+
+                <div class="qr-modal hidden" id="qrModal">
+                    <div class="qr-modal-content">
+                        <h3>🚌 Vehicle QR Code</h3>
+                        <div id="qrCodeDisplay" class="qr-code-display"></div>
+                        <p>Passengers can scan this code to board</p>
+                        <button id="closeQRBtn" class="btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/driver-dashboard.js"></script>
+</body>
+</html>

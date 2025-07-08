@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Map - EcoMiles</title>
+    <meta name="description" content="Real-time GPS tracking with speed verification">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>🌱 EcoMiles</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="journey.html">Journey</a>
+                    <a href="qr-scanner.html">QR Scanner</a>
+                    <button onclick="logout()" class="login-btn">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="realtime-map-container">
+                <div class="tracking-header">
+                    <h2>🗺️ Real-time Journey Tracking</h2>
+                    <div class="tracking-status" id="trackingStatus">
+                        <span class="status-indicator"></span>
+                        <span id="statusText">Ready to track</span>
+                    </div>
+                </div>
+
+                <div class="journey-controls">
+                    <div class="mode-selector">
+                        <label>Transportation Mode:</label>
+                        <select id="transportMode">
+                            <option value="walking">🚶 Walking</option>
+                            <option value="cycling">🚴 Cycling</option>
+                            <option value="bus">🚌 Bus</option>
+                            <option value="car">🚗 Car (Carpool)</option>
+                        </select>
+                    </div>
+                    <div class="journey-buttons">
+                        <button id="startTrackingBtn" class="btn-primary">Start Tracking</button>
+                        <button id="pauseTrackingBtn" class="btn-secondary" style="display: none;">Pause</button>
+                        <button id="stopTrackingBtn" class="btn-secondary" style="display: none;">Stop</button>
+                    </div>
+                </div>
+
+                <div class="live-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📍</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="currentDistance">0.0 km</div>
+                            <div class="stat-label">Distance</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="currentSpeed">0 km/h</div>
+                            <div class="stat-label">Speed</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="journeyTime">00:00:00</div>
+                            <div class="stat-label">Duration</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="earnedPoints">0</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-container">
+                    <div id="realtimeMap" class="realtime-map"></div>
+                </div>
+
+                <div class="speed-verification" id="speedVerification">
+                    <div class="verification-alert">
+                        <h4>⚠️ Speed Verification Required</h4>
+                        <p id="verificationMessage">Current speed suggests different transport mode</p>
+                        <div class="verification-buttons">
+                            <button id="confirmModeBtn" class="btn-primary">Confirm Current Mode</button>
+                            <button id="changeModeBtn" class="btn-secondary">Change Mode</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journey-summary hidden" id="journeySummary">
+                    <h3>✅ Journey Complete</h3>
+                    <div class="summary-stats">
+                        <div class="summary-item">
+                            <label>Total Distance:</label>
+                            <span id="summaryDistance">0.0 km</span>
+                        </div>
+                        <div class="summary-item">
+                            <label>Duration:</label>
+                            <span id="summaryDuration">00:00:00</span>
+                        </div>
+                        <div class="summary-item">
+                            <label>Average Speed:</label>
+                            <span id="summarySpeed">0 km/h</span>
+                        </div>
+                        <div class="summary-item">
+                            <label>Points Earned:</label>
+                            <span id="summaryPoints">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <label>CO₂ Saved:</label>
+                            <span id="summaryCO2">0.0 kg</span>
+                        </div>
+                    </div>
+                    <button id="saveJourneyBtn" class="btn-primary">Save Journey</button>
+                    <button id="newJourneyBtn" class="btn-secondary">Start New Journey</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/realtime-map.js"></script>
+</body>
+</html>
