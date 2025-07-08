@@ -61,18 +61,6 @@ body {
     color: #28a745;
 }
 
-.login-btn {
-    background: #28a745;
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 6px;
-    transition: background 0.3s;
-}
-
-.login-btn:hover {
-    background: #218838;
-}
-
 /* Main Content */
 main {
     margin-top: 70px;
