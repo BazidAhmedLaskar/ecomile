@@ -15,13 +15,20 @@ function initializeLogin() {
     if (user) {
       showStatus('Login successful! Redirecting to dashboard...', 'success');
       setTimeout(() => {
-        window.location.href = 'dashboard.html';
+        // Redirect based on user type
+        if (userType === 'driver') {
+            window.location.href = 'driver-dashboard.html';
+        } else {
+            window.location.href = 'dashboard.html';
+        }
       }, 1500);
     }
   });
 }
 
-async function handleGoogleSignIn() {
+async function handleGoogleSignIn(userType = 'user') {
+  // Store login type temporarily
+  localStorage.setItem('ecomiles_login_type', userType);
   const signInBtn = document.getElementById('googleSignInBtn');
   try {
     signInBtn.disabled = true;

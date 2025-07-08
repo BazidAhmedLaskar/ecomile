@@ -46,11 +46,13 @@ function setupEventListeners() {
 }
 
 function initializeMap() {
-    // Initialize map
-    realtimeMap = L.map('realtimeMap').setView([0, 0], 13);
+    try {
+        // Initialize map with better defaults
+        realtimeMap = L.map('realtimeMap').setView([28.6139, 77.2090], 13); // Default to Delhi, India
     
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
     }).addTo(realtimeMap);
     
     // Get current location and center map
@@ -69,7 +71,13 @@ function initializeMap() {
                     iconSize: [20, 20]
                 })
             }).addTo(realtimeMap);
+        }, (error) => {
+            console.log('Location access denied, using default location');
         });
+    }
+    } catch (error) {
+        console.error('Map initialization error:', error);
+        document.getElementById('realtimeMap').innerHTML = '<p style="text-align: center; color: #666; padding: 50px;">Map loading failed. Please refresh the page.</p>';
     }
 }
 
