@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Firebase if not already done
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  
   if (isUserLoggedIn()) {
     redirectToDashboard();
     return;
@@ -6,8 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeLogin();
 });
 
+// Auth state functions
 function isUserLoggedIn() {
-  return auth.currentUser !== null;
+  return firebase.auth().currentUser !== null;
 }
 
 function redirectToDashboard() {
@@ -17,11 +23,28 @@ function redirectToDashboard() {
     : 'dashboard.html';
 }
 
+// Login initialization
 function initializeLogin() {
-  // Set up both buttons
-  document.getElementById('userSignInBtn').addEventListener('click', () => handleGoogleSignIn('user'));
-  document.getElementById('driverSignInBtn').addEventListener('click', () => handleGoogleSignIn('driver'));
+  const auth = firebase.auth();
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+  
+  // Set up both buttons with proper error handling
+  const userBtn = document.getElementById('userSignInBtn');
+  const driverBtn = document.getElementById('driverSignInBtn');
+  
+  if (userBtn) {
+    userBtn.addEventListener('click', () => handleGoogleSignIn('user', auth, googleProvider));
+  } else {
+    console.error('User sign-in button not found');
+  }
+  
+  if (driverBtn) {
+    driverBtn.addEventListener('click', () => handleGoogleSignIn('driver', auth, googleProvider));
+  } else {
+    console.error('Driver sign-in button not found');
+  }
 
+  // Auth state listener
   auth.onAuthStateChanged((user) => {
     if (user) {
       showStatus('Login successful! Redirecting...', 'success');
@@ -30,97 +53,95 @@ function initializeLogin() {
   });
 }
 
-async function handleGoogleSignIn(userType) {
+// Unified Google Sign-In handler
+async function handleGoogleSignIn(userType, auth, provider) {
   localStorage.setItem('ecomiles_login_type', userType);
+  
   const signInBtn = userType === 'driver' 
     ? document.getElementById('driverSignInBtn') 
     : document.getElementById('userSignInBtn');
   
   if (!signInBtn) {
     console.error('Sign in button not found');
+    showError('System error. Please refresh the page.');
     return;
   }
 
+  // Save original button state
+  const originalHTML = signInBtn.innerHTML;
+  const originalDisabled = signInBtn.disabled;
+
   try {
+    // Update UI
     signInBtn.disabled = true;
     signInBtn.innerHTML = '<span class="spinner">⏳</span> Signing in...';
     hideError();
     showStatus('Opening Google sign-in...', 'info');
 
-    await auth.signInWithPopup(googleProvider);
+    // Add slight delay to ensure UI updates
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Perform sign-in
+    await auth.signInWithPopup(provider);
+    
   } catch (error) {
     console.error('Login error:', error);
-    signInBtn.disabled = false;
-    // Reset to original button text based on user type
-    signInBtn.innerHTML = userType === 'driver' 
-      ? '<span>🚌</span> Continue as Driver' 
-      : '<span>🚶</span> Continue as Passenger';
+    
+    // Reset button state
+    signInBtn.disabled = originalDisabled;
+    signInBtn.innerHTML = originalHTML;
     hideStatus();
 
+    // Handle specific error cases
     let msg = 'Login failed. Please try again.';
     switch (error.code) {
       case 'auth/popup-closed-by-user':
-        msg = 'Popup closed. Please try again.'; break;
+        msg = 'Sign-in was canceled.'; break;
       case 'auth/popup-blocked':
-        msg = 'Popup blocked. Please allow popups.'; break;
+        msg = 'Popup blocked! Please allow popups for this site.'; break;
       case 'auth/network-request-failed':
         msg = 'Network error. Please check your connection.'; break;
       case 'auth/too-many-requests':
-        msg = 'Too many attempts. Try again later.'; break;
+        msg = 'Too many attempts. Please try again later.'; break;
+      case 'auth/cancelled-popup-request':
+        msg = 'Another sign-in attempt is already in progress.'; break;
     }
+    
     showError(msg);
   }
 }
 
-async function handleGoogleSignIn() {
-  const signInBtn = document.getElementById('googleSignInBtn');
-  try {
-    signInBtn.disabled = true;
-    signInBtn.innerHTML = '<span>⏳</span> Signing in...';
-    hideError();
-    showStatus('Opening Google sign-in...', 'info');
-
-    await auth.signInWithPopup(googleProvider);
-  } catch (error) {
-    console.error('Login error:', error);
-    signInBtn.disabled = false;
-    signInBtn.innerHTML = '<span>🔐</span> Sign in with Google';
-    hideStatus();
-
-    let msg = 'Login failed. Please try again.';
-    switch (error.code) {
-      case 'auth/popup-closed-by-user':
-        msg = 'Popup closed. Please try again.'; break;
-      case 'auth/popup-blocked':
-        msg = 'Popup blocked. Allow popups.'; break;
-      case 'auth/network-request-failed':
-        msg = 'Network error.'; break;
-      case 'auth/too-many-requests':
-        msg = 'Too many attempts. Try later.'; break;
-    }
-    showError(msg);
-  }
-}
-
+// UI helper functions
 function showError(message) {
   const errorDiv = document.getElementById('loginError');
-  errorDiv.textContent = message;
-  errorDiv.classList.remove('hidden');
+  if (errorDiv) {
+    errorDiv.textContent = message;
+    errorDiv.classList.remove('hidden');
+  }
 }
 
 function hideError() {
   const errorDiv = document.getElementById('loginError');
-  errorDiv.classList.add('hidden');
+  if (errorDiv) {
+    errorDiv.classList.add('hidden');
+  }
 }
 
 function showStatus(message, type = 'info') {
   const statusDiv = document.getElementById('loginStatus');
-  statusDiv.textContent = message;
-  statusDiv.classList.remove('hidden');
-  statusDiv.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : '#d1ecf1';
-  statusDiv.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#0c5460';
+  if (statusDiv) {
+    statusDiv.textContent = message;
+    statusDiv.classList.remove('hidden');
+    statusDiv.style.background = type === 'success' ? '#d4edda' : 
+                               type === 'error' ? '#f8d7da' : '#d1ecf1';
+    statusDiv.style.color = type === 'success' ? '#155724' : 
+                           type === 'error' ? '#721c24' : '#0c5460';
+  }
 }
 
 function hideStatus() {
-  document.getElementById('loginStatus').classList.add('hidden');
+  const statusDiv = document.getElementById('loginStatus');
+  if (statusDiv) {
+    statusDiv.classList.add('hidden');
+  }
 }
