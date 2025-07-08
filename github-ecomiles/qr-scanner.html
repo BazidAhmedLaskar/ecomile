@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner - EcoMiles</title>
+    <meta name="description" content="Scan QR code to check into public transport vehicles">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>🌱 EcoMiles</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="journey.html">Journey</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                    <button onclick="logout()" class="login-btn">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="qr-scanner-container">
+                <h2>🚌 Board Public Transport</h2>
+                <p>Scan the QR code on your vehicle to start tracking your journey</p>
+                
+                <div class="scanner-box">
+                    <video id="video" autoplay muted playsinline></video>
+                    <div class="scanner-overlay">
+                        <div class="scanner-frame"></div>
+                    </div>
+                </div>
+
+                <div class="scanner-controls">
+                    <button id="startScanBtn" class="btn-primary">Start Scanner</button>
+                    <button id="stopScanBtn" class="btn-secondary" style="display: none;">Stop Scanner</button>
+                </div>
+
+                <div id="scanResult" class="scan-result hidden">
+                    <h3>✅ Vehicle Detected</h3>
+                    <div class="vehicle-info">
+                        <p><strong>Vehicle ID:</strong> <span id="vehicleId"></span></p>
+                        <p><strong>Route:</strong> <span id="vehicleRoute"></span></p>
+                        <p><strong>Type:</strong> <span id="vehicleType"></span></p>
+                    </div>
+                    <button id="boardVehicleBtn" class="btn-primary">Board Vehicle</button>
+                    <button id="scanAgainBtn" class="btn-secondary">Scan Again</button>
+                </div>
+
+                <div id="journeyActive" class="journey-active hidden">
+                    <h3>🚍 Journey in Progress</h3>
+                    <div class="journey-info">
+                        <p><strong>Vehicle:</strong> <span id="activeVehicleId"></span></p>
+                        <p><strong>Start Time:</strong> <span id="startTime"></span></p>
+                        <p><strong>Distance:</strong> <span id="journeyDistance">0.0 km</span></p>
+                        <p><strong>Points Earned:</strong> <span id="pointsEarned">0</span></p>
+                    </div>
+                    <button id="endJourneyBtn" class="btn-primary">End Journey</button>
+                </div>
+
+                <div id="errorMsg" class="error-msg hidden">
+                    <p id="errorText"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/qr-scanner.js"></script>
+</body>
+</html>
