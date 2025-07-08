@@ -124,4 +124,3 @@ function showStatus(message, type = 'info') {
 function hideStatus() {
   document.getElementById('loginStatus').classList.add('hidden');
 }
-// ... (keep the existing showError, hideError, showStatus, hideStatus functions)
