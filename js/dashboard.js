@@ -5,47 +5,38 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDashboard();
     document.getElementById('logoutBtn').addEventListener('click', logout);
 });
+function updateUserInfo(user) {
+  const name = user.name || 'User';
+  const email = user.email;
+  const avatar = document.getElementById('userAvatar');
+  const typedNameEl = document.getElementById('typedName');
+  const userEmail = document.getElementById('userEmail');
 
-async function initializeDashboard() {
-    const user = getCurrentUser();
-    if (!user) return;
+  // Clear previous
+  typedNameEl.textContent = '';
+  userEmail.textContent = email;
 
-    updateUserInfo(user);
-    await loadUserStats(user.uid);
-    await loadRecentJourneys(user.uid);
-    await initializeWeeklyChart(user.uid);
-}function updateUserInfo(user) {
-    const welcomeEl = document.getElementById('welcomeMessage');
-    const name = user.name || 'User';
-
-    // Static "Hi," and animated waving hand
-    welcomeEl.innerHTML = `Hi, <span id="typedName"></span> <span class="wave">👋</span>`;
-
-    // Typing effect
-    const typedNameEl = document.getElementById('typedName');
-    let index = 0;
-
-    function typeLetter() {
-        if (index < name.length) {
-            typedNameEl.textContent += name.charAt(index);
-            index++;
-            setTimeout(typeLetter, 100);
-        }
+  // Animate typing
+  let index = 0;
+  function typeLetter() {
+    if (index < name.length) {
+      typedNameEl.textContent += name.charAt(index);
+      index++;
+      setTimeout(typeLetter, 100);
     }
+  }
 
-    typeLetter();
+  typeLetter();
 
-    // Set email and avatar
-    document.getElementById('userEmail').textContent = user.email;
-    const avatar = document.getElementById('userAvatar');
-
-    if (user.photoURL) {
-        avatar.src = user.photoURL;
-        avatar.style.display = 'block';
-    } else {
-        avatar.style.display = 'none';
-    }
+  // Avatar
+  if (user.photoURL) {
+    avatar.src = user.photoURL;
+    avatar.style.display = 'block';
+  } else {
+    avatar.style.display = 'none';
+  }
 }
+
 
 async function loadUserStats(uid) {
     try {
