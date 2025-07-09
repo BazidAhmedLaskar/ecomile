@@ -15,9 +15,27 @@ async function initializeDashboard() {
     await loadRecentJourneys(user.uid);
     await initializeWeeklyChart(user.uid);
 }
-
 function updateUserInfo(user) {
-    document.getElementById('welcomeMessage').textContent = `Hi, ${user.name || 'User'} 👋`;
+    const name =
+        user.name ||
+        user.displayName ||
+        (user.email ? user.email.split('@')[0] : 'User');
+
+    const message = `Hi, ${name} 👋`;
+    const welcomeEl = document.getElementById('welcomeMessage');
+    welcomeEl.textContent = ''; // Clear old content
+
+    // Typing animation
+    let i = 0;
+    const typingInterval = setInterval(() => {
+        welcomeEl.textContent += message.charAt(i);
+        i++;
+        if (i === message.length) {
+            clearInterval(typingInterval);
+        }
+    }, 80); // Typing speed (ms per character)
+
+    // Email and avatar
     document.getElementById('userEmail').textContent = user.email;
 
     const avatar = document.getElementById('userAvatar');
