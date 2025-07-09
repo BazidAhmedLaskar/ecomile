@@ -5,7 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDashboard();
     document.getElementById('logoutBtn').addEventListener('click', logout);
 });
-function updateUserInfo(user) {
+
+async function initializeDashboard() {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    updateUserInfo(user);
+    await loadUserStats(user.uid);
+    await loadRecentJourneys(user.uid);
+    await initializeWeeklyChart(user.uid);
+}function updateUserInfo(user) {
     const welcomeEl = document.getElementById('welcomeMessage');
     const name = user.name || 'User';
 
@@ -37,7 +46,6 @@ function updateUserInfo(user) {
         avatar.style.display = 'none';
     }
 }
-
 
 async function loadUserStats(uid) {
     try {
