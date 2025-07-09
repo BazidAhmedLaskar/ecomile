@@ -1,30 +1,4 @@
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.user-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.welcome-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-#welcomeMessage {
-  font-size: 1.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}/* Reset and Base Styles */
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -222,37 +196,26 @@ main {
     padding: 40px 0;
     text-align: center;
 }
+
 .user-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .user-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid white;
 }
 
-.welcome-wrapper {
-  display: flex;
-  flex-direction: column;
+.welcome-text h2 {
+    font-size: 2rem;
+    margin-bottom: 5px;
 }
-
-#welcomeMessage {
-  font-size: 1.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.hi-fixed {
-  margin-right: 5px;
-}
-
 .wave {
   display: inline-block;
   animation: wave-animation 2s infinite;
@@ -268,6 +231,11 @@ main {
   50% { transform: rotate(10deg); }
   60% { transform: rotate(0deg); }
   100% { transform: rotate(0deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .stats-grid {
