@@ -14,31 +14,31 @@ async function initializeDashboard() {
     await loadUserStats(user.uid);
     await loadRecentJourneys(user.uid);
     await initializeWeeklyChart(user.uid);
-}
-function updateUserInfo(user) {
-    const name =
-        user.name ||
-        user.displayName ||
-        (user.email ? user.email.split('@')[0] : 'User');
-
-    const message = `Hi, ${name} 👋`;
+}function updateUserInfo(user) {
     const welcomeEl = document.getElementById('welcomeMessage');
-    welcomeEl.textContent = ''; // Clear old content
+    const name = user.name || 'User';
 
-    // Typing animation
-    let i = 0;
-    const typingInterval = setInterval(() => {
-        welcomeEl.textContent += message.charAt(i);
-        i++;
-        if (i === message.length) {
-            clearInterval(typingInterval);
+    // Static "Hi," and animated waving hand
+    welcomeEl.innerHTML = `Hi, <span id="typedName"></span> <span class="wave">👋</span>`;
+
+    // Typing effect
+    const typedNameEl = document.getElementById('typedName');
+    let index = 0;
+
+    function typeLetter() {
+        if (index < name.length) {
+            typedNameEl.textContent += name.charAt(index);
+            index++;
+            setTimeout(typeLetter, 100);
         }
-    }, 80); // Typing speed (ms per character)
+    }
 
-    // Email and avatar
+    typeLetter();
+
+    // Set email and avatar
     document.getElementById('userEmail').textContent = user.email;
-
     const avatar = document.getElementById('userAvatar');
+
     if (user.photoURL) {
         avatar.src = user.photoURL;
         avatar.style.display = 'block';
