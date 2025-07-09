@@ -6,35 +6,36 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('logoutBtn').addEventListener('click', logout);
 });
 function updateUserInfo(user) {
-  const name = user.name || 'User';
-  const email = user.email;
-  const avatar = document.getElementById('userAvatar');
-  const typedNameEl = document.getElementById('typedName');
-  const userEmail = document.getElementById('userEmail');
+    const welcomeEl = document.getElementById('welcomeMessage');
+    const name = user.name || 'User';
 
-  // Clear previous
-  typedNameEl.textContent = '';
-  userEmail.textContent = email;
+    // Static "Hi," and animated waving hand
+    welcomeEl.innerHTML = `Hi, <span id="typedName"></span> <span class="wave">👋</span>`;
 
-  // Animate typing
-  let index = 0;
-  function typeLetter() {
-    if (index < name.length) {
-      typedNameEl.textContent += name.charAt(index);
-      index++;
-      setTimeout(typeLetter, 100);
+    // Typing effect
+    const typedNameEl = document.getElementById('typedName');
+    let index = 0;
+
+    function typeLetter() {
+        if (index < name.length) {
+            typedNameEl.textContent += name.charAt(index);
+            index++;
+            setTimeout(typeLetter, 100);
+        }
     }
-  }
 
-  typeLetter();
+    typeLetter();
 
-  // Avatar
-  if (user.photoURL) {
-    avatar.src = user.photoURL;
-    avatar.style.display = 'block';
-  } else {
-    avatar.style.display = 'none';
-  }
+    // Set email and avatar
+    document.getElementById('userEmail').textContent = user.email;
+    const avatar = document.getElementById('userAvatar');
+
+    if (user.photoURL) {
+        avatar.src = user.photoURL;
+        avatar.style.display = 'block';
+    } else {
+        avatar.style.display = 'none';
+    }
 }
 
 
