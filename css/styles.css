@@ -1,3 +1,59 @@
+/* === Status Item Entry Animation === */
+.status-item {
+  animation: statusFadeSlide 0.5s ease forwards;
+  opacity: 0;
+}
+
+.status-item:nth-child(1) { animation-delay: 0.1s; }
+.status-item:nth-child(2) { animation-delay: 0.2s; }
+.status-item:nth-child(3) { animation-delay: 0.3s; }
+.status-item:nth-child(4) { animation-delay: 0.4s; }
+.status-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* === Pulse Glow Animation for Active/Inactive === */
+.status-active {
+  animation: pulseGlowGreen 1.5s infinite;
+}
+
+.status-inactive {
+  animation: pulseGlowRed 1.5s infinite;
+}
+
+/* === Keyframes === */
+@keyframes statusFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseGlowGreen {
+  0% {
+    text-shadow: 0 0 5px #28a745, 0 0 10px #28a745;
+  }
+  50% {
+    text-shadow: 0 0 15px #28a745, 0 0 30px #28a745;
+  }
+  100% {
+    text-shadow: 0 0 5px #28a745, 0 0 10px #28a745;
+  }
+}
+
+@keyframes pulseGlowRed {
+  0% {
+    text-shadow: 0 0 5px #dc3545, 0 0 10px #dc3545;
+  }
+  50% {
+    text-shadow: 0 0 15px #dc3545, 0 0 30px #dc3545;
+  }
+  100% {
+    text-shadow: 0 0 5px #dc3545, 0 0 10px #dc3545;
+  }
+}
 /* Reset and Base Styles */
 * {
     margin: 0;
