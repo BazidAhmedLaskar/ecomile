@@ -1,50 +1,66 @@
-/* ===== Loader ===== */
+/* === Modern Loader === */
 .loader-wrapper {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: white;
-  z-index: 9999;
+  inset: 0;
+  background: #fff;
   display: flex;
-  justify-content: center;
   align-items: center;
-  animation: fadeOut 1s 2s forwards;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeOut 2s 2.5s forwards;
 }
 
-.loader {
-  border: 5px solid #ddd;
-  border-top: 5px solid #28a745;
-  border-radius: 50%;
+.pulse-loader {
   width: 50px;
   height: 50px;
-  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  background: #28a745;
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  to { opacity: 0; visibility: hidden; }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ===== Reset & Layout ===== */
-body {
+/* === General Reset === */
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f2fef2;
+  background: #f6fff6;
   color: #222;
+  overflow-x: hidden;
 }
 
 a {
-  text-decoration: none;
   color: #28a745;
+  text-decoration: none;
+  transition: 0.3s;
 }
 
+/* === Navbar === */
 header {
   background: #fff;
-  padding: 10px 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  padding: 16px 24px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.08);
 }
 
 .navbar {
@@ -53,84 +69,148 @@ header {
   align-items: center;
 }
 
-.nav-links a {
-  margin-left: 15px;
+.logo {
+  font-size: 1.4rem;
   font-weight: bold;
+}
+
+.nav-links a {
+  margin-left: 20px;
+  font-weight: 500;
 }
 
 .login-btn {
   background: #28a745;
-  color: #fff;
+  color: white;
   padding: 6px 14px;
   border-radius: 6px;
 }
 
-/* ===== Hero Section ===== */
+/* === Hero Section === */
 .hero {
-  padding: 60px 20px;
   text-align: center;
-  background: linear-gradient(to bottom, #e0fce0, #f4fff4);
+  padding: 80px 20px;
+  background: linear-gradient(to right, #e0fce0, #f4fff4);
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+  color: #28a745;
+  animation: slideUpFade 1s ease-out 2s forwards;
+  opacity: 0;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #444;
+  margin: 15px 0 30px;
+  animation: fadeIn 1s ease 2.5s forwards;
+  opacity: 0;
 }
 
 .cta-button {
-  display: inline-block;
-  margin-top: 20px;
   background: #28a745;
   color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  display: inline-block;
+  transform: scale(1);
+  animation: scaleFade 0.6s ease-in-out 3s forwards;
+  opacity: 0;
 }
 
 .cta-button:hover {
+  background-color: #1c7a34;
   transform: scale(1.05);
 }
 
-/* ===== Features Section ===== */
+/* === Features === */
 .features {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  padding: 40px 20px;
+  gap: 24px;
+  padding: 60px 20px;
 }
 
 .card {
-  background: white;
+  background: #fff;
+  border-radius: 14px;
   padding: 20px;
-  border-radius: 10px;
-  width: 180px;
+  width: 200px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transform: translateY(40px);
+  opacity: 0;
+  animation: riseFade 0.8s ease forwards;
+  animation-delay: calc(var(--i) * 0.15s + 3s);
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* ===== Animations ===== */
-.animate {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 1s ease forwards;
-  animation-delay: 2s;
+/* Add delay for each card */
+.card:nth-child(1) { --i: 0; }
+.card:nth-child(2) { --i: 1; }
+.card:nth-child(3) { --i: 2; }
+.card:nth-child(4) { --i: 3; }
+.card:nth-child(5) { --i: 4; }
+.card:nth-child(6) { --i: 5; }
+
+/* === Footer === */
+footer {
+  background: #e0ffe0;
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+  margin-top: 40px;
 }
 
-@keyframes fadeInUp {
+/* === Animations === */
+@keyframes slideUpFade {
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes scaleFade {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes riseFade {
   to {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
-/* ===== Footer ===== */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #e0ffe0;
-  font-size: 14px;
+/* === Responsive === */
+@media (max-width: 768px) {
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
 }
 
 /* === Grid Layout === */
