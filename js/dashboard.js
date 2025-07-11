@@ -2,6 +2,16 @@
 
 document.getElementById('logoutBtn').addEventListener('click', logout);
 
+function logout() {
+  auth.signOut().then(() => {
+    localStorage.removeItem('ecomiles_user');
+    window.location.href = 'index.html';
+  }).catch(err => {
+    console.error('Error signing out:', err);
+  });
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!requireAuth()) return;
 
