@@ -1,4 +1,7 @@
 // Dashboard functionality
+
+document.getElementById('logoutBtn').addEventListener('click', logout);
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!requireAuth()) return;
 
