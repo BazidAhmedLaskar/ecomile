@@ -1,4 +1,4 @@
-/* === Modern Loader === */
+/* === Loader === */
 .loader-wrapper {
   position: fixed;
   inset: 0;
@@ -36,7 +36,7 @@
   }
 }
 
-/* === General Reset === */
+/* === Reset === */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -152,7 +152,6 @@ header {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Add delay for each card */
 .card:nth-child(1) { --i: 0; }
 .card:nth-child(2) { --i: 1; }
 .card:nth-child(3) { --i: 2; }
