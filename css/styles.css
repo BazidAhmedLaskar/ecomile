@@ -1,217 +1,138 @@
-/* =============== 🌍 Loader =============== */
-#loader {
+/* ===== Loader ===== */
+.loader-wrapper {
   position: fixed;
   width: 100%;
   height: 100%;
   background: white;
-  background-image: url('../img/loader.gif'); /* You can also use a pure CSS spinner */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 70px;
-  z-index: 10000;
-  animation: fadeOut 1s ease 1.2s forwards;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeOut 1s 2s forwards;
+}
+
+.loader {
+  border: 5px solid #ddd;
+  border-top: 5px solid #28a745;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes fadeOut {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
+  to { opacity: 0; visibility: hidden; }
 }
 
-/* =============== 🪄 Fade In Animations =============== */
-.fade {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 0.9s ease-out forwards;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-.delay-1 { animation-delay: 0.3s; }
-.delay-2 { animation-delay: 0.6s; }
-.delay-3 { animation-delay: 0.9s; }
-.delay-4 { animation-delay: 1.2s; }
-
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* =============== 🔥 Hover Effects =============== */
-.feature-card,
-.benefit {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feature-card:hover,
-.benefit:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.cta-button:hover {
-  background-color: #1e7e34;
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* =============== 🧠 Structure & Typography =============== */
+/* ===== Reset & Layout ===== */
 body {
-  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  padding: 0;
-  background: #f6fef6;
-  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f2fef2;
+  color: #222;
 }
 
-.container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 0 20px;
+a {
+  text-decoration: none;
+  color: #28a745;
+}
+
+header {
+  background: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .navbar {
-  background: #fff;
-  padding: 15px 0;
-  border-bottom: 1px solid #ddd;
-}
-
-.nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .nav-links a {
-  margin-left: 20px;
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: #28a745;
+  margin-left: 15px;
+  font-weight: bold;
 }
 
 .login-btn {
   background: #28a745;
-  color: white;
-  padding: 8px 18px;
+  color: #fff;
+  padding: 6px 14px;
   border-radius: 6px;
-  border: none;
 }
 
+/* ===== Hero Section ===== */
 .hero {
-  text-align: center;
   padding: 60px 20px;
-  background: linear-gradient(to bottom right, #eafbea, #f6fff6);
-}
-
-.hero h2 {
-  font-size: 2.5rem;
-  color: #28a745;
-}
-
-.hero-subtitle {
-  font-size: 1.1rem;
-  margin: 15px auto 40px;
-  color: #444;
-}
-
-.features-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 25px;
-}
-
-.feature-card {
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  width: 280px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-}
-
-.feature-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.cta-section {
-  margin-top: 50px;
+  background: linear-gradient(to bottom, #e0fce0, #f4fff4);
 }
 
 .cta-button {
-  background-color: #28a745;
-  color: #fff;
-  text-decoration: none;
-  padding: 12px 30px;
+  display: inline-block;
+  margin-top: 20px;
+  background: #28a745;
+  color: white;
+  padding: 12px 24px;
   border-radius: 8px;
-  font-size: 1.1rem;
-  transition: 0.3s;
+  transition: transform 0.3s ease;
 }
 
-.cta-subtitle {
-  margin-top: 12px;
-  color: #666;
+.cta-button:hover {
+  transform: scale(1.05);
 }
 
-/* =============== 📊 Benefits Section =============== */
-.benefits {
-  padding: 60px 20px;
-  background: #fff;
-  text-align: center;
-}
-
-.benefits-grid {
+/* ===== Features Section ===== */
+.features {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
   justify-content: center;
-  margin-top: 40px;
+  gap: 20px;
+  padding: 40px 20px;
 }
 
-.benefit {
-  background: #f4fef4;
+.card {
+  background: white;
   padding: 20px;
   border-radius: 10px;
-  width: 220px;
+  width: 180px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* ===== Animations ===== */
+.animate {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Footer ===== */
 footer {
-  background: #e0ffe0;
   text-align: center;
   padding: 20px;
-  font-size: 0.9rem;
+  background: #e0ffe0;
+  font-size: 14px;
 }
 
-.footer-links a {
-  margin: 0 10px;
-  color: #333;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
-/* =============== 📱 Responsive =============== */
-@media (max-width: 768px) {
-  .features-grid,
-  .benefits-grid {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .feature-card,
-  .benefit {
-    width: 90%;
-  }
-}
 /* === Grid Layout === */
 .stats-grid {
   display: grid;
