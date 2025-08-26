@@ -66,14 +66,16 @@ function setupModeSelection() {
 }
 
 function setupManualForm() {
-    const form = document.getElementById('manualJourneyForm');
     const modeSelect = document.getElementById('transportMode');
-    const distanceInput = document.getElementById('distance');
-    const pointsPreview = document.getElementById('pointsPreview');
-    const previewText = document.getElementById('previewText');
+    const distanceInput = document.getElementById('expectedDistance');
+    const setupPreview = document.getElementById('setupPreview');
+    const setupPreviewText = document.getElementById('setupPreviewText');
+    const startBtn = document.getElementById('startManualJourney');
+    const endBtn = document.getElementById('endManualJourney');
+    const saveBtn = document.getElementById('saveCompletedJourney');
     
     // Update preview when inputs change
-    function updatePreview() {
+    function updateSetupPreview() {
         const mode = modeSelect.value;
         const distance = parseFloat(distanceInput.value) || 0;
         
@@ -81,22 +83,163 @@ function setupManualForm() {
             const points = calculatePoints(mode, distance);
             const co2Saved = (distance * 0.21).toFixed(1);
             
-            previewText.innerHTML = `
-                <strong>Distance:</strong> ${distance} km<br>
-                <strong>Mode:</strong> ${mode.charAt(0).toUpperCase() + mode.slice(1)}<br>
-                <strong>Points Earned:</strong> ${points}<br>
-                <strong>CO₂ Saved:</strong> ${co2Saved} kg
+            setupPreviewText.innerHTML = `
+                <strong>Transport Mode:</strong> ${mode.charAt(0).toUpperCase() + mode.slice(1)}<br>
+                <strong>Expected Distance:</strong> ${distance} km<br>
+                <strong>Estimated Points:</strong> ${points}<br>
+                <strong>Estimated CO₂ Saved:</strong> ${co2Saved} kg
             `;
-            pointsPreview.style.display = 'block';
+            setupPreview.style.display = 'block';
         } else {
-            pointsPreview.style.display = 'none';
+            setupPreview.style.display = 'none';
         }
     }
     
-    modeSelect.addEventListener('change', updatePreview);
-    distanceInput.addEventListener('input', updatePreview);
+    modeSelect.addEventListener('change', updateSetupPreview);
+    distanceInput.addEventListener('input', updateSetupPreview);
+    startBtn.addEventListener('click', startManualJourney);
+    endBtn.addEventListener('click', endManualJourney);
+    saveBtn.addEventListener('click', saveManualJourney);
+}
+
+let manualJourneyData = null;
+let manualStartTime = null;
+let manualTimer = null;
+
+function startManualJourney() {
+    const mode = document.getElementById('transportMode').value;
+    const expectedDistance = parseFloat(document.getElementById('expectedDistance').value);
+    const notes = document.getElementById('journeyNotes').value.trim();
     
-    form.addEventListener('submit', handleManualSubmit);
+    if (!mode || !expectedDistance || expectedDistance <= 0) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Store journey data
+    manualJourneyData = {
+        mode,
+        expectedDistance,
+        notes
+    };
+    
+    // Set start time
+    manualStartTime = new Date();
+    
+    // Switch to tracking phase
+    document.getElementById('manualSetup').style.display = 'none';
+    document.getElementById('manualTracking').style.display = 'block';
+    
+    // Update tracking display
+    document.getElementById('activeMode').textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+    document.getElementById('activeDistance').textContent = expectedDistance;
+    document.getElementById('startTime').textContent = manualStartTime.toLocaleTimeString();
+    
+    // Start timer
+    updateElapsedTime();
+    manualTimer = setInterval(updateElapsedTime, 1000);
+}
+
+function updateElapsedTime() {
+    if (!manualStartTime) return;
+    
+    const now = new Date();
+    const elapsed = Math.floor((now - manualStartTime) / 1000);
+    
+    const hours = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+    const seconds = (elapsed % 60).toString().padStart(2, '0');
+    
+    document.getElementById('elapsedTime').textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+function endManualJourney() {
+    const actualDistance = parseFloat(document.getElementById('actualDistance').value);
+    
+    if (!actualDistance || actualDistance <= 0) {
+        alert('Please enter the actual distance traveled');
+        return;
+    }
+    
+    if (actualDistance > 1000) {
+        alert('Distance cannot exceed 1000 km');
+        return;
+    }
+    
+    // Stop timer
+    if (manualTimer) {
+        clearInterval(manualTimer);
+        manualTimer = null;
+    }
+    
+    // Calculate points and savings
+    const points = calculatePoints(manualJourneyData.mode, actualDistance);
+    const co2Saved = (actualDistance * 0.21).toFixed(1);
+    const roadTaxSaved = (points * 0.1).toFixed(1);
+    
+    // Update journey data with actual values
+    manualJourneyData.actualDistance = actualDistance;
+    manualJourneyData.points = points;
+    manualJourneyData.endTime = new Date();
+    
+    // Switch to completion phase
+    document.getElementById('manualTracking').style.display = 'none';
+    document.getElementById('manualCompletion').style.display = 'block';
+    
+    // Show completion summary
+    const elapsed = Math.floor((manualJourneyData.endTime - manualStartTime) / 1000);
+    const duration = `${Math.floor(elapsed / 60)}m ${elapsed % 60}s`;
+    
+    document.getElementById('completionSummary').innerHTML = `
+        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h4 style="color: #28a745; margin-bottom: 15px;">Journey Summary</h4>
+            <div style="text-align: left; line-height: 1.6;">
+                <strong>Transport Mode:</strong> ${manualJourneyData.mode.charAt(0).toUpperCase() + manualJourneyData.mode.slice(1)}<br>
+                <strong>Distance Traveled:</strong> ${actualDistance} km<br>
+                <strong>Duration:</strong> ${duration}<br>
+                <strong>EcoPoints Earned:</strong> <span style="color: #28a745; font-weight: bold;">${points}</span><br>
+                <strong>CO₂ Saved:</strong> ${co2Saved} kg<br>
+                <strong>Road Tax Saved:</strong> ₹${roadTaxSaved}<br>
+                ${manualJourneyData.notes ? `<strong>Notes:</strong> ${manualJourneyData.notes}` : ''}
+            </div>
+        </div>
+    `;
+}
+
+async function saveManualJourney() {
+    if (!manualJourneyData || !manualJourneyData.actualDistance) {
+        alert('No journey data to save');
+        return;
+    }
+    
+    const saveBtn = document.getElementById('saveCompletedJourney');
+    const originalText = saveBtn.textContent;
+    
+    try {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving Journey...';
+        
+        await saveJourney({
+            mode: manualJourneyData.mode,
+            distance: manualJourneyData.actualDistance,
+            points: manualJourneyData.points,
+            notes: manualJourneyData.notes,
+            type: 'manual',
+            startLocation: null,
+            endLocation: null
+        });
+        
+        // Show success and redirect
+        alert(`Journey saved! You earned ${manualJourneyData.points} EcoPoints.`);
+        window.location.href = 'dashboard.html';
+        
+    } catch (error) {
+        console.error('Error saving manual journey:', error);
+        alert('Failed to save journey: ' + error.message);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalText;
+    }
 }
 
 function setupGpsForm() {
@@ -125,55 +268,7 @@ function calculatePoints(mode, distance) {
     return Math.round(pointsPerKm * distance);
 }
 
-async function handleManualSubmit(event) {
-    event.preventDefault();
-    
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    
-    try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving Journey...';
-        
-        const mode = document.getElementById('transportMode').value;
-        const distance = parseFloat(document.getElementById('distance').value);
-        const notes = document.getElementById('journeyNotes').value.trim();
-        
-        // Validation
-        if (!mode || !distance || distance <= 0) {
-            throw new Error('Please fill in all required fields');
-        }
-        
-        if (distance > 1000) {
-            throw new Error('Distance cannot exceed 1000 km');
-        }
-        
-        const points = calculatePoints(mode, distance);
-        
-        console.log('Manual journey data:', { mode, distance, points, notes });
-        
-        await saveJourney({
-            mode,
-            distance,
-            points,
-            notes,
-            type: 'manual',
-            startLocation: null,
-            endLocation: null
-        });
-        
-        // Show success and redirect
-        alert(`Journey saved! You earned ${points} EcoPoints.`);
-        window.location.href = 'dashboard.html';
-        
-    } catch (error) {
-        console.error('Error saving manual journey:', error);
-        alert('Failed to save journey: ' + error.message);
-        
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    }
-}
+// Old handleManualSubmit function removed - now using 3-phase system
 
 function startGpsTracking() {
     if (!navigator.geolocation) {
