@@ -76,48 +76,41 @@ function highlightCurrentPage() {
     });
 }
 
-// Global Dashboard for all pages
+// Simplified Dashboard for all pages
 function initializeGlobalDashboard() {
-    createGlobalStatsWidget();
+    // Remove the inconvenient live status dashboard
+    // Only show basic user stats without live tracking
+    createSimpleStatsWidget();
     loadUserStats();
 }
 
-function createGlobalStatsWidget() {
+function createSimpleStatsWidget() {
     // Only create if not already exists
     if (document.getElementById('globalStatsWidget')) return;
     
     const widget = document.createElement('div');
     widget.id = 'globalStatsWidget';
     widget.innerHTML = `
-        <div style="position: fixed; top: 70px; right: 20px; z-index: 1000; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 15px; min-width: 200px; font-size: 0.9rem; border: 2px solid #28a745;">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 1.2rem; margin-right: 8px;">📊</span>
-                <strong style="color: #28a745;">Live Stats</strong>
-                <button onclick="toggleGlobalStats()" style="background: none; border: none; margin-left: auto; font-size: 1rem; cursor: pointer;">−</button>
+        <div style="position: fixed; top: 70px; right: 20px; z-index: 1000; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 12px; min-width: 160px; font-size: 0.85rem; border: 1px solid #ddd;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 1rem; margin-right: 6px;">📊</span>
+                <strong style="color: #28a745; font-size: 0.9rem;">My Stats</strong>
+                <button onclick="toggleGlobalStats()" style="background: none; border: none; margin-left: auto; font-size: 0.9rem; cursor: pointer;">−</button>
             </div>
             <div id="globalStatsContent">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
-                    <div style="text-align: center; padding: 8px; background: #f8f9fa; border-radius: 6px;">
-                        <div style="font-weight: bold; color: #28a745;" id="globalPoints">-</div>
-                        <div style="font-size: 0.8rem; color: #666;">EcoPoints</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px;">
+                    <div style="text-align: center; padding: 6px; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #28a745; font-size: 0.9rem;" id="globalPoints">-</div>
+                        <div style="font-size: 0.7rem; color: #666;">Points</div>
                     </div>
-                    <div style="text-align: center; padding: 8px; background: #f8f9fa; border-radius: 6px;">
-                        <div style="font-weight: bold; color: #007bff;" id="globalDistance">-</div>
-                        <div style="font-size: 0.8rem; color: #666;">Total km</div>
+                    <div style="text-align: center; padding: 6px; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #007bff; font-size: 0.9rem;" id="globalDistance">-</div>
+                        <div style="font-size: 0.7rem; color: #666;">km</div>
                     </div>
                 </div>
-                <div style="text-align: center; padding: 8px; background: #e8f5e8; border-radius: 6px; margin-bottom: 10px;">
-                    <div style="font-weight: bold; color: #155724;" id="globalTaxSaved">₹-</div>
-                    <div style="font-size: 0.8rem; color: #666;">Tax Saved</div>
-                </div>
-                <div id="liveJourneyStats" style="display: none; background: #fff3cd; border-radius: 6px; padding: 8px; border: 1px solid #ffeaa7;">
-                    <div style="font-size: 0.8rem; color: #856404; margin-bottom: 5px;"><strong>🚀 Live Journey</strong></div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.8rem;">
-                        <div>Distance: <span id="liveDist">0</span>km</div>
-                        <div>Speed: <span id="liveSpeed">0</span>km/h</div>
-                        <div>Time: <span id="liveTime">00:00</span></div>
-                        <div>Mode: <span id="liveMode">-</span></div>
-                    </div>
+                <div style="text-align: center; padding: 6px; background: #e8f5e8; border-radius: 4px;">
+                    <div style="font-weight: bold; color: #155724; font-size: 0.9rem;" id="globalTaxSaved">₹-</div>
+                    <div style="font-size: 0.7rem; color: #666;">Tax Saved</div>
                 </div>
             </div>
         </div>
@@ -157,25 +150,7 @@ async function loadUserStats() {
     }
 }
 
-// Update live journey stats (called from journey.js)
-function updateGlobalLiveStats(distance, speed, time, mode) {
-    const liveJourneyStats = document.getElementById('liveJourneyStats');
-    if (!liveJourneyStats) return;
-    
-    liveJourneyStats.style.display = 'block';
-    document.getElementById('liveDist').textContent = distance.toFixed(2);
-    document.getElementById('liveSpeed').textContent = Math.round(speed);
-    document.getElementById('liveTime').textContent = time;
-    document.getElementById('liveMode').textContent = mode || '-';
-}
-
-// Hide live journey stats when journey ends
-function hideLiveJourneyStats() {
-    const liveJourneyStats = document.getElementById('liveJourneyStats');
-    if (liveJourneyStats) {
-        liveJourneyStats.style.display = 'none';
-    }
-}
+// Removed live journey stats tracking as it was inconvenient
 
 // Global logout function (works across all pages)
 function logout() {

@@ -135,6 +135,9 @@ function startManualJourney() {
     // Set start time
     manualStartTime = new Date();
     
+    // Initialize manual verification map
+    initializeManualVerificationMap();
+    
     // Switch to tracking phase
     document.getElementById('manualSetup').style.display = 'none';
     document.getElementById('manualTracking').style.display = 'block';
@@ -445,8 +448,60 @@ function initializeFallbackMap(lat, lng) {
         </div>
     `;
     
-    // Store first coordinate for fallback
+        // Store first coordinate for fallback
     pathCoordinates.push({ lat, lng });
+}
+
+// Manual journey verification map
+function initializeManualVerificationMap() {
+    if (!navigator.geolocation) {
+        document.getElementById('manualMap').innerHTML = `
+            <div style="text-align: center; color: #999;">
+                📍 GPS not available on this device
+            </div>
+        `;
+        return;
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            document.getElementById('manualMap').innerHTML = `
+                <div style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; max-width: 250px;">
+                        <div style="font-size: 1.5rem; margin-bottom: 8px;">📍</div>
+                        <h4 style="margin: 0 0 8px 0; color: #333;">Location Verified</h4>
+                        <p style="margin: 0; color: #666; font-size: 0.85rem;">Your location is being tracked for transport verification</p>
+                        
+                        <div style="margin-top: 12px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 0.75rem; color: #888; margin-bottom: 3px;">Current Coordinates</div>
+                            <div style="font-family: monospace; font-size: 0.8rem; color: #333;">
+                                ${lat.toFixed(6)}, ${lng.toFixed(6)}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="position: absolute; top: 15px; left: 15px; background: rgba(40, 167, 69, 0.9); color: white; padding: 6px 10px; border-radius: 15px; font-size: 0.75rem; font-weight: bold;">
+                        ✓ Verified
+                    </div>
+                </div>
+            `;
+        },
+        (error) => {
+            document.getElementById('manualMap').innerHTML = `
+                <div style="text-align: center; color: #999;">
+                    📍 Location access denied<br>
+                    <small>Manual verification only</small>
+                </div>
+            `;
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000
+        }
+    );
 }
 
 function updateGpsTimer() {
@@ -510,12 +565,7 @@ function updateGpsPosition(position) {
         const suggestedMode = detectTransportMode(currentSpeed, totalDistance);
         updateTransportModeSuggestion(suggestedMode, currentSpeed);
         
-        // Update global dashboard with live journey stats
-        const elapsedTime = document.getElementById('gpsElapsedTime')?.textContent || '00:00';
-        const currentMode = document.getElementById('gpsTransportMode')?.value || suggestedMode;
-        if (typeof updateGlobalLiveStats === 'function') {
-            updateGlobalLiveStats(totalDistance, currentSpeed, elapsedTime, getModeDisplayName(currentMode));
-        }
+        // Removed inconvenient live stats updates
         
         console.log(`Distance: ${totalDistance.toFixed(2)} km, Speed: ${currentSpeed.toFixed(1)} km/h, Suggested: ${suggestedMode}`);
         
@@ -538,10 +588,7 @@ function stopGpsTracking() {
     
     isTracking = false;
     
-    // Hide live journey stats from global dashboard
-    if (typeof hideLiveJourneyStats === 'function') {
-        hideLiveJourneyStats();
-    }
+    // Removed live journey stats functionality
     
     const statusText = document.getElementById('gpsStatusText');
     const startBtn = document.getElementById('startGpsBtn');
