@@ -102,24 +102,10 @@
         </div>
     </main>
 
-    <!-- Firebase Configuration for Netlify -->
-    <script>
-        window.FIREBASE_CONFIG = {
-            apiKey: window.location.hostname === 'localhost' ? 
-                'AIzaSyDFJQKYkWywoSprZqOtjqjoYAe7nkGOfEI' : 
-                process.env.VITE_FIREBASE_API_KEY,
-            projectId: window.location.hostname === 'localhost' ? 
-                'ecomiles-70c6e' : 
-                process.env.VITE_FIREBASE_PROJECT_ID,
-            appId: window.location.hostname === 'localhost' ? 
-                '1:247523942180:web:947f664f5de7f0c1759db1' : 
-                process.env.VITE_FIREBASE_APP_ID
-        };
-    </script>
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+    <!-- Firebase Scripts (Compat Version) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <!-- Firebase Configuration -->
     <script src="js/firebase-config.js"></script>

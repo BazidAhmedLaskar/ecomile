@@ -3,6 +3,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Dashboard loading...');
     
+    // Wait for Firebase to load
+    if (typeof firebase === 'undefined') {
+        console.error('Firebase not loaded');
+        return;
+    }
+    
     // Check authentication
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
