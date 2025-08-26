@@ -1,7 +1,7 @@
 import express from 'express';
 import { createServer } from 'http';
 import path from 'path';
-import routes from './routes.js';
+import routes from './routes';
 
 const app = express();
 const server = createServer(app);
