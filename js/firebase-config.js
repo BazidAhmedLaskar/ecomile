@@ -1,38 +1,93 @@
-// Firebase configuration - using environment variables for Netlify deployment
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: window.FIREBASE_CONFIG?.apiKey || "AIzaSyDFJQKYkWywoSprZqOtjqjoYAe7nkGOfEI",
-  authDomain: window.FIREBASE_CONFIG?.authDomain || "ecomiles-70c6e.firebaseapp.com",
-  projectId: window.FIREBASE_CONFIG?.projectId || "ecomiles-70c6e",
-  storageBucket: window.FIREBASE_CONFIG?.storageBucket || "ecomiles-70c6e.firebasestorage.app",
-  messagingSenderId: window.FIREBASE_CONFIG?.messagingSenderId || "247523942180",
-  appId: window.FIREBASE_CONFIG?.appId || "1:247523942180:web:947f664f5de7f0c1759db1",
-  measurementId: window.FIREBASE_CONFIG?.measurementId || "G-2TP0NK67TX"
+  apiKey: "AIzaSyDFJQKYkWywoSprZqOtjqjoYAe7nkGOfEI",
+  authDomain: "ecomiles-70c6e.firebaseapp.com",
+  projectId: "ecomiles-70c6e",
+  storageBucket: "ecomiles-70c6e.firebasestorage.app",
+  messagingSenderId: "247523942180",
+  appId: "1:247523942180:web:947f664f5de7f0c1759db1",
+  measurementId: "G-2TP0NK67TX"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// Google Auth Provider
-const googleProvider = new firebase.auth.GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
-
-// Auth observer
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    const userData = {
-      uid: user.uid,
-      name: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL
-    };
-    localStorage.setItem('ecomiles_user', JSON.stringify(userData));
-    initializeUserData(user);
-  } else {
-    localStorage.removeItem('ecomiles_user');
+// Wait for Firebase to load, then initialize
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof firebase === 'undefined') {
+    console.error('Firebase not loaded');
+    return;
+  }
+  
+  // Initialize Firebase
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
   }
 });
+
+// Initialize Firebase immediately if available
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+// Get Firebase services (these will be available after Firebase loads)
+function getFirebaseServices() {
+  if (typeof firebase !== 'undefined') {
+    return {
+      auth: firebase.auth(),
+      db: firebase.firestore()
+    };
+  }
+  return null;
+}
+
+// Global variables that will be set when Firebase loads
+let auth, db;
+
+// Set up auth and db when Firebase is ready
+function initializeFirebaseServices() {
+  if (typeof firebase !== 'undefined') {
+    auth = firebase.auth();
+    db = firebase.firestore();
+    
+    // Initialize Google Auth Provider
+    googleProvider = new firebase.auth.GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
+    
+    // Set up auth observer
+    setupAuthObserver();
+    
+    return true;
+  }
+  return false;
+}
+
+function setupAuthObserver() {
+  if (!auth) return;
+  
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      const userData = {
+        uid: user.uid,
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL
+      };
+      localStorage.setItem('ecomiles_user', JSON.stringify(userData));
+      initializeUserData(user);
+    } else {
+      localStorage.removeItem('ecomiles_user');
+    }
+  });
+}
+
+// Try to initialize immediately
+initializeFirebaseServices();
+
+// Also try when DOM loads
+document.addEventListener('DOMContentLoaded', initializeFirebaseServices);
+
+// Google Auth Provider (initialized after Firebase loads)
+let googleProvider;
+
+// Auth observer will be set up in setupAuthObserver()
 
 // Create user doc if not exist
 async function initializeUserData(user) {
