@@ -109,12 +109,24 @@
            apiKey: window.location.hostname === 'localhost' ? 
                'AIzaSyDFJQKYkWywoSprZqOtjqjoYAe7nkGOfEI' : 
                process.env.VITE_FIREBASE_API_KEY,
+           authDomain: window.location.hostname === 'localhost' ? 
+               'ecomiles-70c6e.firebaseapp.com' : 
+               process.env.VITE_FIREBASE_AUTH_DOMAIN,
            projectId: window.location.hostname === 'localhost' ? 
                'ecomiles-70c6e' : 
                process.env.VITE_FIREBASE_PROJECT_ID,
+           storageBucket: window.location.hostname === 'localhost' ? 
+               'ecomiles-70c6e.firebasestorage.app' : 
+               process.env.VITE_FIREBASE_STORAGE_BUCKET,
+           messagingSenderId: window.location.hostname === 'localhost' ? 
+               '247523942180' : 
+               process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
            appId: window.location.hostname === 'localhost' ? 
                '1:247523942180:web:947f664f5de7f0c1759db1' : 
-               process.env.VITE_FIREBASE_APP_ID
+               process.env.VITE_FIREBASE_APP_ID,
+           measurementId: window.location.hostname === 'localhost' ? 
+               'G-2TP0NK67TX' : 
+               process.env.VITE_FIREBASE_MEASUREMENT_ID
        };
    </script>
    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>

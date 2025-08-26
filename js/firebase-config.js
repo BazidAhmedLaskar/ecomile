@@ -1,10 +1,12 @@
 // Firebase configuration - using environment variables for Netlify deployment
 const firebaseConfig = {
-  apiKey: window.FIREBASE_CONFIG?.apiKey || "your-api-key",
-  authDomain: `${window.FIREBASE_CONFIG?.projectId || "your-project-id"}.firebaseapp.com`,
-  projectId: window.FIREBASE_CONFIG?.projectId || "your-project-id",
-  storageBucket: `${window.FIREBASE_CONFIG?.projectId || "your-project-id"}.firebasestorage.app`,
-  appId: window.FIREBASE_CONFIG?.appId || "your-app-id"
+  apiKey: window.FIREBASE_CONFIG?.apiKey || "AIzaSyDFJQKYkWywoSprZqOtjqjoYAe7nkGOfEI",
+  authDomain: window.FIREBASE_CONFIG?.authDomain || "ecomiles-70c6e.firebaseapp.com",
+  projectId: window.FIREBASE_CONFIG?.projectId || "ecomiles-70c6e",
+  storageBucket: window.FIREBASE_CONFIG?.storageBucket || "ecomiles-70c6e.firebasestorage.app",
+  messagingSenderId: window.FIREBASE_CONFIG?.messagingSenderId || "247523942180",
+  appId: window.FIREBASE_CONFIG?.appId || "1:247523942180:web:947f664f5de7f0c1759db1",
+  measurementId: window.FIREBASE_CONFIG?.measurementId || "G-2TP0NK67TX"
 };
 
 // Initialize Firebase
