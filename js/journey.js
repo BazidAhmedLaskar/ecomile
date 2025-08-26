@@ -5,21 +5,26 @@ let gpsCurrentPosition = null;
 let isTracking = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Wait for Firebase to initialize before checking auth
-    const checkAuthAndInit = () => {
+    // Wait for Firebase to load, then check authentication
+    const initializeWhenReady = () => {
         if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-            if (!requireAuth()) {
-                return;
-            }
-            // Initialize journey functionality
-            initializeJourney();
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    console.log('User authenticated:', user.uid);
+                    // Initialize journey functionality
+                    initializeJourney();
+                } else {
+                    console.log('No user found, redirecting to login');
+                    window.location.href = 'login.html';
+                }
+            });
         } else {
-            // Wait a bit more for Firebase to load
-            setTimeout(checkAuthAndInit, 500);
+            // Wait for Firebase to load
+            setTimeout(initializeWhenReady, 500);
         }
     };
     
-    checkAuthAndInit();
+    initializeWhenReady();
 });
 
 function initializeJourney() {
@@ -415,7 +420,7 @@ async function handleGpsSubmit() {
 }
 
 async function saveJourney(journeyData) {
-    const user = getCurrentUser();
+    const user = firebase.auth().currentUser;
     if (!user) throw new Error('User not authenticated');
     
     try {
@@ -443,16 +448,20 @@ async function saveJourney(journeyData) {
             address: ""
         };
         
-        // Create journey document with proper field names matching database structure
+        // Create journey document with fields matching what dashboard expects
         const journeyDoc = {
             userId: user.uid,
-            transportMode: journeyData.mode,
+            mode: journeyData.mode,  // Dashboard uses 'mode' field
+            transportMode: journeyData.mode,  // Keep both for compatibility
             distance: journeyData.distance || 0,
-            pointsEarned: journeyData.points || 0,
+            points: journeyData.points || 0,  // Dashboard uses 'points' field
+            pointsEarned: journeyData.points || 0,  // Keep both for compatibility
             notes: journeyData.notes || '',
             status: 'completed',
+            type: journeyData.type || 'manual',
             startLocation: startLocation,
             endLocation: endLocation,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
