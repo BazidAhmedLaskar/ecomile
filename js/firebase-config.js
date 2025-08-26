@@ -39,7 +39,7 @@ function getFirebaseServices() {
 }
 
 // Global variables that will be set when Firebase loads
-let auth, db;
+let auth, db, googleProvider;
 
 // Set up auth and db when Firebase is ready
 function initializeFirebaseServices() {
@@ -88,7 +88,6 @@ initializeFirebaseServices();
 document.addEventListener('DOMContentLoaded', initializeFirebaseServices);
 
 // Google Auth Provider (initialized after Firebase loads)
-let googleProvider;
 
 // Auth observer will be set up in setupAuthObserver()
 

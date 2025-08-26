@@ -154,10 +154,9 @@ function updateStatCards(data) {
 async function loadRecentJourneys(uid) {
     const list = document.getElementById('journeysList');
     try {
+        // Simple query without orderBy to avoid index requirement
         const snapshot = await db.collection('journeys')
             .where('userId', '==', uid)
-            .orderBy('timestamp', 'desc')
-            .limit(5)
             .get();
 
         if (snapshot.empty) {
@@ -167,9 +166,24 @@ async function loadRecentJourneys(uid) {
             return;
         }
 
-        let html = '';
+        // Sort journeys by timestamp in JavaScript and take the most recent 5
+        const journeys = [];
         snapshot.forEach(doc => {
-            const j = doc.data();
+            const data = doc.data();
+            journeys.push({ id: doc.id, ...data });
+        });
+
+        // Sort by timestamp descending and take first 5
+        journeys.sort((a, b) => {
+            const aTime = a.timestamp?.toDate() || new Date(0);
+            const bTime = b.timestamp?.toDate() || new Date(0);
+            return bTime - aTime;
+        });
+
+        const recentJourneys = journeys.slice(0, 5);
+
+        let html = '';
+        recentJourneys.forEach(j => {
             const date = j.timestamp?.toDate() || new Date();
             const emoji = getModeEmoji(j.mode || j.transportMode);
 
@@ -265,18 +279,21 @@ async function getWeeklyJourneyData(uid) {
 
     const result = Array(7).fill(0);
     try {
+        // Simple query without multiple where clauses to avoid index requirement
         const snap = await db.collection('journeys')
             .where('userId', '==', uid)
-            .where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(weekAgo))
-            .orderBy('timestamp', 'asc')
             .get();
 
         const today = new Date();
+        const weekAgoTime = weekAgo.getTime();
+        
         snap.forEach(doc => {
             const j = doc.data();
             const ts = j.timestamp?.toDate();
-            const diff = Math.floor((today - ts) / (1000 * 60 * 60 * 24));
-            if (diff >= 0 && diff < 7) result[6 - diff] += j.points || 0;
+            if (ts && ts.getTime() >= weekAgoTime) {
+                const diff = Math.floor((today - ts) / (1000 * 60 * 60 * 24));
+                if (diff >= 0 && diff < 7) result[6 - diff] += j.points || 0;
+            }
         });
     } catch (e) {
         console.error('Weekly data error:', e);

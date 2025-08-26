@@ -1,0 +1,506 @@
+firebase-config.js:51 Uncaught ReferenceError: Cannot access 'googleProvider' before initialization
+    at initializeFirebaseServices (firebase-config.js:51:20)
+    at firebase-config.js:85:1
+initializeFirebaseServices @ firebase-config.js:51
+(anonymous) @ firebase-config.js:85
+dashboard.js:4 Dashboard loading...
+dashboard.js:15 User authenticated: FjXXuIY6mkbRBzi6G0mwfv0w3032
+dashboard.js:40 Initializing dashboard for user: FjXXuIY6mkbRBzi6G0mwfv0w3032
+dashboard.js:101 Loading stats for user: FjXXuIY6mkbRBzi6G0mwfv0w3032
+dashboard.js:106 User data loaded: {name: 'Bazid Ahmed Laskar', points: 0, photoURL: 'https://lh3.googleusercontent.com/a/ACg8ocLUJ84S30ffF4DMMAhl7Q0t2X91zU26NWLgVOfN0yPQukdP1Znv=s96-c', createdAt: ri, totalDistance: 0, …}
+dashboard.js:141 Updating stat cards with data: {name: 'Bazid Ahmed Laskar', points: 0, photoURL: 'https://lh3.googleusercontent.com/a/ACg8ocLUJ84S30ffF4DMMAhl7Q0t2X91zU26NWLgVOfN0yPQukdP1Znv=s96-c', createdAt: ri, totalDistance: 0, …}createdAt: ri {seconds: 1756189842, nanoseconds: 410000000}email: "ahmedlaskarbazid@gmail.com"name: "Bazid Ahmed Laskar"photoURL: "https://lh3.googleusercontent.com/a/ACg8ocLUJ84S30ffF4DMMAhl7Q0t2X91zU26NWLgVOfN0yPQukdP1Znv=s96-c"points: 0roadTaxSaved: 0totalDistance: 0[[Prototype]]: Object
+dashboard.js:191 Journey load failed: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/ecomiles-70c6e/firestore/indexes?create_composite=Ck9wcm9qZWN0cy9lY29taWxlcy03MGM2ZS9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvam91cm5leXMvaW5kZXhlcy9fEAEaCgoGdXNlcklkEAEaDQoJdGltZXN0YW1wEAIaDAoIX19uYW1lX18QAg
+    at new Br (prebuilt.js:184:9)
+    at prebuilt.js:4030:20
+    at Ml.onMessage (prebuilt.js:4017:1)
+    at prebuilt.js:10971:27
+    at prebuilt.js:10994:61
+    at prebuilt.js:15000:73
+    at prebuilt.js:15033:54
+loadRecentJourneys @ dashboard.js:191
+await in loadRecentJourneys
+initializeDashboard @ dashboard.js:52
+await in initializeDashboard
+(anonymous) @ dashboard.js:16
+(anonymous) @ subscribe.ts:104
+(anonymous) @ subscribe.ts:233
+Promise.then
+I.sendOne @ subscribe.ts:230
+I.forEachObserver @ subscribe.ts:220
+I.next @ subscribe.ts:103
+n @ auth.js:1532
+(anonymous) @ auth.js:2005
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:479
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:468
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+(anonymous) @ rpchandler.js:933
+(anonymous) @ rpchandler.js:612
+vn @ eventtarget.js:336
+fn.dispatchEvent @ eventtarget.js:460
+ba @ xhrio.js:865
+t.Jc @ xhrio.js:811
+t.Wb @ xhrio.js:795
+XMLHttpRequest.send
+pa @ xhrio.js:625
+qa.u @ rpchandler.js:641
+Za @ rpchandler.js:536
+(anonymous) @ rpchandler.js:921
+fe @ promise.js:163
+es @ rpchandler.js:916
+(anonymous) @ rpchandler.js:876
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:568
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:486
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:468
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:330
+IndexedDB
+(anonymous) @ indexeddb.js:290
+fe @ promise.js:163
+wu @ indexeddb.js:291
+Iu @ indexeddb.js:347
+e @ indexeddb.js:364
+fe @ promise.js:163
+Tu @ indexeddb.js:362
+set @ indexeddb.js:464
+(anonymous) @ indexeddb.js:259
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+ye @ promise.js:345
+Cu @ hybridindexeddb.js:57
+Bu @ factory.js:118
+Wu @ authstorage.js:239
+Gh @ storageusermanager.js:90
+Zh @ auth.js:122
+instanceFactory @ exports_auth.js:757
+C.getOrInitializeService @ provider.ts:318
+C.getImmediate @ provider.ts:115
+$._getService @ firebaseApp.ts:136
+n.type.a.<computed> @ firebaseNamespaceCore.ts:228
+e @ firebaseNamespaceCore.ts:209
+initializeFirebaseServices @ firebase-config.js:47
+(anonymous) @ firebase-config.js:85
+dashboard.js:282 Weekly data error: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/ecomiles-70c6e/firestore/indexes?create_composite=Ck9wcm9qZWN0cy9lY29taWxlcy03MGM2ZS9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvam91cm5leXMvaW5kZXhlcy9fEAEaCgoGdXNlcklkEAEaDQoJdGltZXN0YW1wEAEaDAoIX19uYW1lX18QAQ
+    at new Br (prebuilt.js:184:9)
+    at prebuilt.js:4030:20
+    at Ml.onMessage (prebuilt.js:4017:1)
+    at prebuilt.js:10971:27
+    at prebuilt.js:10994:61
+    at prebuilt.js:15000:73
+    at prebuilt.js:15033:54
+getWeeklyJourneyData @ dashboard.js:282
+await in getWeeklyJourneyData
+initializeWeeklyChart @ dashboard.js:212
+initializeDashboard @ dashboard.js:53
+await in initializeDashboard
+(anonymous) @ dashboard.js:16
+(anonymous) @ subscribe.ts:104
+(anonymous) @ subscribe.ts:233
+Promise.then
+I.sendOne @ subscribe.ts:230
+I.forEachObserver @ subscribe.ts:220
+I.next @ subscribe.ts:103
+n @ auth.js:1532
+(anonymous) @ auth.js:2005
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:479
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:468
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+(anonymous) @ rpchandler.js:933
+(anonymous) @ rpchandler.js:612
+vn @ eventtarget.js:336
+fn.dispatchEvent @ eventtarget.js:460
+ba @ xhrio.js:865
+t.Jc @ xhrio.js:811
+t.Wb @ xhrio.js:795
+XMLHttpRequest.send
+pa @ xhrio.js:625
+qa.u @ rpchandler.js:641
+Za @ rpchandler.js:536
+(anonymous) @ rpchandler.js:921
+fe @ promise.js:163
+es @ rpchandler.js:916
+(anonymous) @ rpchandler.js:876
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:568
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:546
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:486
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:442
+IndexedDB
+(anonymous) @ indexeddb.js:468
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+(anonymous) @ promise.js:167
+t.onsuccess @ indexeddb.js:330
+IndexedDB
+(anonymous) @ indexeddb.js:290
+fe @ promise.js:163
+wu @ indexeddb.js:291
+Iu @ indexeddb.js:347
+e @ indexeddb.js:364
+fe @ promise.js:163
+Tu @ indexeddb.js:362
+set @ indexeddb.js:464
+(anonymous) @ indexeddb.js:259
+e.g @ promise.js:826
+Ce @ promise.js:1166
+Oe @ promise.js:1140
+t.gc @ promise.js:1111
+le @ run.js:124
+Promise.then
+ie @ run.js:55
+ue @ run.js:34
+Ne @ promise.js:1029
+ke @ promise.js:921
+ye @ promise.js:345
+Cu @ hybridindexeddb.js:57
+Bu @ factory.js:118
+Wu @ authstorage.js:239
+Gh @ storageusermanager.js:90
+Zh @ auth.js:122
+instanceFactory @ exports_auth.js:757
+C.getOrInitializeService @ provider.ts:318
+C.getImmediate @ provider.ts:115
+$._getService @ firebaseApp.ts:136
+n.type.a.<computed> @ firebaseNamespaceCore.ts:228
+e @ firebaseNamespaceCore.ts:209
+initializeFirebaseServices @ firebase-config.js:47
+(anonymous) @ firebase-config.js:85
