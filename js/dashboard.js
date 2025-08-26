@@ -1,33 +1,53 @@
 // Dashboard functionality
 
-document.getElementById('logoutBtn').addEventListener('click', logout);
-
-function logout() {
-  auth.signOut().then(() => {
-    localStorage.removeItem('ecomiles_user');
-    window.location.href = 'index.html';
-  }).catch(err => {
-    console.error('Error signing out:', err);
-  });
-}
-
-
 document.addEventListener('DOMContentLoaded', () => {
-    if (!requireAuth()) return;
-
-    initializeDashboard();
-    document.getElementById('logoutBtn').addEventListener('click', logout);
+    console.log('Dashboard loading...');
+    
+    // Check authentication
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            console.log('User authenticated:', user.uid);
+            initializeDashboard();
+        } else {
+            console.log('No user found, redirecting to login');
+            window.location.href = 'login.html';
+        }
+    });
 });
 
-async function initializeDashboard() {
-    const user = getCurrentUser();
-    if (!user) return;
+function logout() {
+    firebase.auth().signOut().then(() => {
+        localStorage.removeItem('ecomiles_user');
+        window.location.href = 'index.html';
+    }).catch(err => {
+        console.error('Error signing out:', err);
+    });
+}
 
-    updateUserInfo(user);
+async function initializeDashboard() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('No authenticated user found');
+        return;
+    }
+
+    console.log('Initializing dashboard for user:', user.uid);
+    
+    // Update user info display
+    updateUserInfo({
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid
+    });
+    
+    // Load user data from Firebase
     await loadUserStats(user.uid);
     await loadRecentJourneys(user.uid);
     await initializeWeeklyChart(user.uid);
-}function updateUserInfo(user) {
+}
+
+function updateUserInfo(user) {
     const welcomeEl = document.getElementById('welcomeMessage');
     const name = user.name || 'User';
 
@@ -49,33 +69,80 @@ async function initializeDashboard() {
     typeLetter();
 
     // Set email and avatar
-    document.getElementById('userEmail').textContent = user.email;
+    const emailEl = document.getElementById('userEmail');
     const avatar = document.getElementById('userAvatar');
+    const profileAvatarImg = document.getElementById('profileAvatarImg');
 
+    if (emailEl) emailEl.textContent = user.email;
+    
     if (user.photoURL) {
-        avatar.src = user.photoURL;
-        avatar.style.display = 'block';
+        if (avatar) {
+            avatar.src = user.photoURL;
+            avatar.style.display = 'block';
+        }
+        if (profileAvatarImg) {
+            profileAvatarImg.src = user.photoURL;
+            profileAvatarImg.style.display = 'block';
+        }
     } else {
-        avatar.style.display = 'none';
+        if (avatar) avatar.style.display = 'none';
+        if (profileAvatarImg) profileAvatarImg.style.display = 'none';
     }
 }
 
 async function loadUserStats(uid) {
     try {
+        console.log('Loading stats for user:', uid);
         const doc = await db.collection('users').doc(uid).get();
-        const data = doc.exists ? doc.data() : { points: 0, totalDistance: 0, roadTaxSaved: 0 };
-        updateStatCards(data);
+        
+        if (doc.exists) {
+            const data = doc.data();
+            console.log('User data loaded:', data);
+            updateStatCards(data);
+        } else {
+            console.log('No user document found, creating one...');
+            // Create user document if it doesn't exist
+            await createUserDocument(uid);
+            updateStatCards({ points: 0, totalDistance: 0, roadTaxSaved: 0 });
+        }
     } catch (err) {
         console.error('Error loading stats:', err);
         updateStatCards({ points: 0, totalDistance: 0, roadTaxSaved: 0 });
     }
 }
 
+async function createUserDocument(uid) {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+    
+    try {
+        await db.collection('users').doc(uid).set({
+            name: user.displayName || 'User',
+            email: user.email,
+            photoURL: user.photoURL || '',
+            points: 0,
+            totalDistance: 0,
+            roadTaxSaved: 0,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('User document created successfully');
+    } catch (error) {
+        console.error('Error creating user document:', error);
+    }
+}
+
 function updateStatCards(data) {
-    document.getElementById('totalPoints').textContent = data.points?.toLocaleString() || '0';
-    document.getElementById('totalDistance').textContent = `${(data.totalDistance || 0).toFixed(1)} km`;
-    document.getElementById('co2Saved').textContent = `${((data.totalDistance || 0) * 0.21).toFixed(1)} kg`;
-    document.getElementById('roadTaxSaved').textContent = `₹${(data.roadTaxSaved || 0).toFixed(0)}`;
+    console.log('Updating stat cards with data:', data);
+    
+    const totalPointsEl = document.getElementById('totalPoints');
+    const totalDistanceEl = document.getElementById('totalDistance');
+    const co2SavedEl = document.getElementById('co2Saved');
+    const roadTaxSavedEl = document.getElementById('roadTaxSaved');
+    
+    if (totalPointsEl) totalPointsEl.textContent = (data.points || 0).toLocaleString();
+    if (totalDistanceEl) totalDistanceEl.textContent = `${(data.totalDistance || 0).toFixed(1)} km`;
+    if (co2SavedEl) co2SavedEl.textContent = `${((data.totalDistance || 0) * 0.21).toFixed(1)} kg`;
+    if (roadTaxSavedEl) roadTaxSavedEl.textContent = `₹${(data.roadTaxSaved || 0).toFixed(0)}`;
 }
 
 async function loadRecentJourneys(uid) {
@@ -89,7 +156,7 @@ async function loadRecentJourneys(uid) {
 
         if (snapshot.empty) {
             list.innerHTML = `<p style="text-align:center;color:#666;padding:40px;">
-                No journeys yet. <a href="journey.html">Add one</a>
+                No journeys yet. <a href="journey.html">Add your first journey!</a>
             </p>`;
             return;
         }
@@ -98,17 +165,17 @@ async function loadRecentJourneys(uid) {
         snapshot.forEach(doc => {
             const j = doc.data();
             const date = j.timestamp?.toDate() || new Date();
-            const emoji = getModeEmoji(j.mode);
+            const emoji = getModeEmoji(j.mode || j.transportMode);
 
             html += `
             <div class="journey-item" style="background:#fff;padding:20px;margin:10px 0;border-radius:8px;box-shadow:0 1px 8px rgba(0,0,0,0.08);display:flex;justify-content:space-between;">
                 <div>
-                    <div style="font-weight:600">${emoji} ${capitalize(j.mode)}</div>
+                    <div style="font-weight:600">${emoji} ${capitalize(j.mode || j.transportMode || 'Journey')}</div>
                     <div style="font-size:0.9rem;color:#888">${date.toLocaleDateString()} at ${date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
                 </div>
                 <div style="text-align:right">
-                    <div style="font-weight:700;color:#28a745">+${j.points} points</div>
-                    <div style="font-size:0.9rem;color:#666">${j.distance.toFixed(1)} km</div>
+                    <div style="font-weight:700;color:#28a745">+${j.points || 0} points</div>
+                    <div style="font-size:0.9rem;color:#666">${(j.distance || 0).toFixed(1)} km</div>
                 </div>
             </div>`;
         });
@@ -122,12 +189,13 @@ async function loadRecentJourneys(uid) {
 
 function getModeEmoji(mode) {
     return {
-        walk: '🚶', cycle: '🚴', bus: '🚌',
-        carpool: '🚘', train: '🚆', metro: '🚇'
+        walk: '🚶', walking: '🚶', cycle: '🚴', cycling: '🚴', bus: '🚌',
+        carpool: '🚘', car: '🚘', train: '🚆', metro: '🚇'
     }[mode] || '🚶';
 }
 
 function capitalize(str) {
+    if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
