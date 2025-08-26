@@ -65,6 +65,7 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 75px;
+    padding: 0 20px;
 }
 
 .logo h1 {
@@ -79,18 +80,24 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: flex-end;
+    height: 100%;
+    padding-right: 0;
 }
 
 .profile-avatar {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
     border: 3px solid var(--secondary-green);
     transition: all 0.3s ease;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
 }
 
 .profile-avatar:hover {
@@ -104,23 +111,24 @@ body {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    display: block;
 }
 
 /* Navigation Dropdown */
 .nav-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 15px);
     right: 0;
     background: var(--white);
     border-radius: var(--border-radius-md);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    min-width: 220px;
+    min-width: 240px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 1001;
-    margin-top: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .nav-dropdown.show {
@@ -133,12 +141,13 @@ body {
     content: '';
     position: absolute;
     top: -8px;
-    right: 15px;
+    right: 22px;
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom: 8px solid var(--white);
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
 }
 
 .nav-dropdown ul {
