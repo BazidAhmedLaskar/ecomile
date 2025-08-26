@@ -24,6 +24,38 @@
                     <a href="profile.html">Profile</a>
                     <button id="logoutBtn" class="login-btn">Logout</button>
                 </div>
+                <div class="profile-menu">
+                    <div class="profile-avatar" id="profileAvatar" onclick="toggleProfileMenu()">
+                        <img id="profileAvatarImg" src="" alt="Profile" class="profile-avatar-img">
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <a href="dashboard.html" class="dropdown-item">
+                                <span class="dropdown-icon">📊</span>
+                                Dashboard
+                            </a>
+                            <a href="journey.html" class="dropdown-item">
+                                <span class="dropdown-icon">➕</span>
+                                Add Journey
+                            </a>
+                            <a href="leaderboard.html" class="dropdown-item">
+                                <span class="dropdown-icon">🏆</span>
+                                Leaderboard
+                            </a>
+                            <a href="rewards.html" class="dropdown-item">
+                                <span class="dropdown-icon">🎖️</span>
+                                Rewards
+                            </a>
+                            <a href="profile.html" class="dropdown-item">
+                                <span class="dropdown-icon">👤</span>
+                                My Profile
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" onclick="logout()" class="dropdown-item logout-item">
+                                <span class="dropdown-icon">🚪</span>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -130,5 +162,65 @@
     
     <!-- Dashboard Logic -->
     <script src="js/dashboard.js"></script>
+    
+    <!-- Profile Menu JavaScript -->
+    <script>
+        // Profile Menu Toggle
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileMenu = document.querySelector('.profile-menu');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (!profileMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Sync profile avatar with user data
+        function updateProfileAvatar() {
+            const user = getCurrentUser();
+            if (user && user.photoURL) {
+                const profileAvatarImg = document.getElementById('profileAvatarImg');
+                const userAvatar = document.getElementById('userAvatar');
+                
+                if (profileAvatarImg) {
+                    profileAvatarImg.src = user.photoURL;
+                }
+                
+                // Sync with existing user avatar in dashboard
+                if (userAvatar) {
+                    profileAvatarImg.src = userAvatar.src || user.photoURL;
+                }
+            }
+        }
+
+        // Update profile avatar when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Firebase auth to load
+            setTimeout(updateProfileAvatar, 1000);
+        });
+
+        // Update when user avatar changes
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                    updateProfileAvatar();
+                }
+            });
+        });
+
+        // Observe changes to main user avatar
+        setTimeout(() => {
+            const userAvatar = document.getElementById('userAvatar');
+            if (userAvatar) {
+                observer.observe(userAvatar, { attributes: true });
+            }
+        }, 1000);
+    </script>
 </body>
 </html>

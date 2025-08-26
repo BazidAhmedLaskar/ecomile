@@ -22,6 +22,38 @@
                     <a href="profile.html">Profile</a>
                     <button id="logoutBtn" class="login-btn">Logout</button>
                 </div>
+                <div class="profile-menu">
+                    <div class="profile-avatar" id="profileAvatar" onclick="toggleProfileMenu()">
+                        <img id="profileAvatarImg" src="" alt="Profile" class="profile-avatar-img">
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <a href="dashboard.html" class="dropdown-item">
+                                <span class="dropdown-icon">📊</span>
+                                Dashboard
+                            </a>
+                            <a href="journey.html" class="dropdown-item">
+                                <span class="dropdown-icon">➕</span>
+                                Add Journey
+                            </a>
+                            <a href="leaderboard.html" class="dropdown-item">
+                                <span class="dropdown-icon">🏆</span>
+                                Leaderboard
+                            </a>
+                            <a href="rewards.html" class="dropdown-item">
+                                <span class="dropdown-icon">🎖️</span>
+                                Rewards
+                            </a>
+                            <a href="profile.html" class="dropdown-item">
+                                <span class="dropdown-icon">👤</span>
+                                My Profile
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" onclick="logout()" class="dropdown-item logout-item">
+                                <span class="dropdown-icon">🚪</span>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -294,6 +326,36 @@
             
             badgesContainer.innerHTML = badgesHtml;
         }
+        
+        // Profile Menu Toggle
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileMenu = document.querySelector('.profile-menu');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (!profileMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Update profile avatar with user data
+        function updateProfileAvatar() {
+            const user = getCurrentUser();
+            if (user && user.photoURL) {
+                const profileAvatarImg = document.getElementById('profileAvatarImg');
+                if (profileAvatarImg) {
+                    profileAvatarImg.src = user.photoURL;
+                }
+            }
+        }
+
+        // Update profile avatar when page loads
+        setTimeout(updateProfileAvatar, 1000);
     </script>
 </body>
 </html>
