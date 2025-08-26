@@ -1,4 +1,4 @@
-modules = ["nodejs-20"]
+modules = ["nodejs-20", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"
@@ -8,4 +8,4 @@ localPort = 3000
 externalPort = 80
 
 [agent]
-integrations = ["javascript_websocket==1.0.0"]
+integrations = ["javascript_websocket==1.0.0", "javascript_database==1.0.0"]

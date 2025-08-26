@@ -6,11 +6,13 @@ EcoMiles is a frontend-only web application that tracks and gamifies sustainable
 
 ## System Architecture
 
-### Frontend Architecture
-- **Technology Stack**: Pure HTML, CSS, and JavaScript (Vanilla JS)
-- **Architecture Pattern**: Multi-page application with static routing
-- **Data Persistence**: Firebase Firestore with localStorage backup
-- **External Services**: Firebase for authentication and data storage
+### Full-Stack Architecture
+- **Frontend**: Pure HTML, CSS, and JavaScript (Vanilla JS)
+- **Backend**: Express.js server with PostgreSQL database
+- **Database**: PostgreSQL with Drizzle ORM for type-safe queries
+- **Architecture Pattern**: Multi-page application with REST API endpoints
+- **Data Persistence**: PostgreSQL database for production data storage
+- **External Services**: Firebase for authentication (optional fallback)
 
 ### Authentication Strategy
 - **Provider**: Firebase Authentication
@@ -22,17 +24,18 @@ EcoMiles is a frontend-only web application that tracks and gamifies sustainable
 
 ### Core Pages
 1. **Landing Page** (`index.html`) - Application introduction and entry point with feature overview
-2. **Authentication** (`login.html`) - Google login integration with Firebase Auth
+2. **Authentication** (`login.html`) - Dual login system for passengers and drivers
 3. **Dashboard** (`dashboard.html`) - Main user interface with metrics, charts, and recent journeys
 4. **Journey Tracking** (`journey.html`) - Manual entry and GPS-based trip logging with real-time tracking
 5. **Real-time Map** (`realtime-map.html`) - Live GPS tracking with speed verification and route visualization
 6. **QR Scanner** (`qr-scanner.html`) - QR code scanning for public transport check-in with passenger tracking
 7. **Driver Dashboard** (`driver-dashboard.html`) - Vehicle management interface for drivers with real-time passenger monitoring
-8. **Leaderboard** (`leaderboard.html`) - User ranking system with top 3 podium and full table
-9. **Rewards** (`rewards.html`) - Achievement badges and road tax deduction calculator
-10. **Profile** (`profile.html`) - User account management with journey history and data export
-11. **Setup Demo Data** (`setup-demo-data.html`) - Driver account creation and vehicle configuration
-12. **Information Pages** (`how-it-works.html`, `contact.html`, `404.html`) - Support content and error handling
+8. **Driver Setup** (`driver-setup.html`) - First-time driver registration with vehicle details and verification
+9. **Leaderboard** (`leaderboard.html`) - User ranking system with top 3 podium and full table
+10. **Rewards** (`rewards.html`) - Achievement badges and road tax deduction calculator
+11. **Profile** (`profile.html`) - User account management with journey history and data export
+12. **Setup Demo Data** (`setup-demo-data.html`) - Driver account creation and vehicle configuration
+13. **Information Pages** (`how-it-works.html`, `contact.html`, `404.html`) - Support content and error handling
 
 ### JavaScript Modules
 - **Firebase Configuration** (`js/firebase-config.js`) - Authentication and Firestore setup with error handling
