@@ -506,7 +506,18 @@ function updateGpsPosition(position) {
         document.getElementById('currentSpeed').textContent = Math.round(currentSpeed);
         document.getElementById('distanceValue').textContent = totalDistance.toFixed(2);
         
-        console.log(`Distance: ${totalDistance.toFixed(2)} km, Speed: ${currentSpeed.toFixed(1)} km/h`);
+        // Auto-detect and suggest transport mode based on average speed
+        const suggestedMode = detectTransportMode(currentSpeed, totalDistance);
+        updateTransportModeSuggestion(suggestedMode, currentSpeed);
+        
+        // Update global dashboard with live journey stats
+        const elapsedTime = document.getElementById('gpsElapsedTime')?.textContent || '00:00';
+        const currentMode = document.getElementById('gpsTransportMode')?.value || suggestedMode;
+        if (typeof updateGlobalLiveStats === 'function') {
+            updateGlobalLiveStats(totalDistance, currentSpeed, elapsedTime, getModeDisplayName(currentMode));
+        }
+        
+        console.log(`Distance: ${totalDistance.toFixed(2)} km, Speed: ${currentSpeed.toFixed(1)} km/h, Suggested: ${suggestedMode}`);
         
         // Update preview if transport mode is selected
         updateGpsPreview();
@@ -527,6 +538,11 @@ function stopGpsTracking() {
     
     isTracking = false;
     
+    // Hide live journey stats from global dashboard
+    if (typeof hideLiveJourneyStats === 'function') {
+        hideLiveJourneyStats();
+    }
+    
     const statusText = document.getElementById('gpsStatusText');
     const startBtn = document.getElementById('startGpsBtn');
     const stopBtn = document.getElementById('stopGpsBtn');
@@ -545,6 +561,66 @@ function stopGpsTracking() {
     console.log('GPS tracking stopped. Final distance:', currentDistance);
 }
 
+// Transport mode detection based on speed
+function detectTransportMode(currentSpeed, totalDistance) {
+    // Only suggest after some distance to get accurate readings
+    if (totalDistance < 0.1) return null;
+    
+    // Speed ranges for different transport modes (km/h)
+    if (currentSpeed >= 0 && currentSpeed <= 8) {
+        return 'walk';  // Walking: 0-8 km/h
+    } else if (currentSpeed > 8 && currentSpeed <= 25) {
+        return 'cycle'; // Cycling: 8-25 km/h
+    } else if (currentSpeed > 25 && currentSpeed <= 50) {
+        return 'bus';   // Bus/Public transport: 25-50 km/h
+    } else if (currentSpeed > 50 && currentSpeed <= 80) {
+        return 'carpool'; // Carpool: 50-80 km/h
+    } else if (currentSpeed > 80) {
+        return 'train'; // Train/Metro: 80+ km/h
+    }
+    return null;
+}
+
+function updateTransportModeSuggestion(suggestedMode, currentSpeed) {
+    const modeSelect = document.getElementById('gpsTransportMode');
+    if (!modeSelect || !suggestedMode) return;
+    
+    // Auto-select suggested mode if none selected
+    if (!modeSelect.value) {
+        modeSelect.value = suggestedMode;
+        
+        // Add visual indicator
+        const modeIndicator = document.getElementById('modeIndicator') || createModeIndicator();
+        modeIndicator.innerHTML = `
+            <div style="background: #e8f5e8; padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 4px solid #28a745;">
+                <strong>🤖 Auto-detected:</strong> ${getModeDisplayName(suggestedMode)} 
+                <small style="color: #666;">(${Math.round(currentSpeed)} km/h)</small>
+            </div>
+        `;
+        modeIndicator.style.display = 'block';
+    }
+}
+
+function createModeIndicator() {
+    const indicator = document.createElement('div');
+    indicator.id = 'modeIndicator';
+    const modeSelect = document.getElementById('gpsTransportMode');
+    modeSelect.parentNode.insertBefore(indicator, modeSelect.nextSibling);
+    return indicator;
+}
+
+function getModeDisplayName(mode) {
+    const modeNames = {
+        'walk': '🚶 Walking',
+        'cycle': '🚴 Cycling', 
+        'bus': '🚌 Bus/Public Transport',
+        'carpool': '🚘 Carpool',
+        'train': '🚆 Train',
+        'metro': '🚇 Metro'
+    };
+    return modeNames[mode] || mode;
+}
+
 function resetGpsTracking() {
     stopGpsTracking();
     
@@ -553,12 +629,17 @@ function resetGpsTracking() {
     const completionForm = document.getElementById('gpsCompletionForm');
     const errorDiv = document.getElementById('gpsError');
     const mapContainer = document.getElementById('gpsMapContainer');
+    const modeIndicator = document.getElementById('modeIndicator');
     
     statusText.textContent = 'Ready to start';
     distanceDisplay.style.display = 'none';
     completionForm.style.display = 'none';
     errorDiv.style.display = 'none';
     mapContainer.style.display = 'none';
+    
+    if (modeIndicator) {
+        modeIndicator.style.display = 'none';
+    }
     
     // Reset all displays
     document.getElementById('distanceValue').textContent = '0.0';
