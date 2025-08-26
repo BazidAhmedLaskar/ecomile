@@ -152,6 +152,27 @@
                 <div id="gpsForm" class="tracking-form" style="display: none;">
                     <h3 style="margin-bottom: 20px; color: #28a745;">GPS Journey Tracking</h3>
                     
+                    <!-- GPS Map Container -->
+                    <div id="gpsMapContainer" style="display: none; margin-bottom: 30px;">
+                        <div id="gpsMap" style="height: 400px; width: 100%; border-radius: 12px; border: 2px solid #28a745;"></div>
+                        
+                        <!-- Real-time Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px;">
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #28a745;" id="realTimeDistance">0.0</div>
+                                <div style="color: #666; font-size: 0.9rem;">Distance (km)</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #007bff;" id="currentSpeed">0</div>
+                                <div style="color: #666; font-size: 0.9rem;">Speed (km/h)</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #ffc107;" id="gpsElapsedTime">00:00</div>
+                                <div style="color: #666; font-size: 0.9rem;">Duration</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="gps-controls">
                         <div id="gpsStatus" class="gps-status">
                             <strong>GPS Status:</strong> <span id="gpsStatusText">Ready to start</span>
@@ -163,7 +184,7 @@
                         
                         <div style="display: flex; gap: 15px; justify-content: center; margin: 20px 0;">
                             <button id="startGpsBtn" class="btn-primary">
-                                ▶️ Start Journey
+                                🗺️ Start GPS Journey
                             </button>
                             <button id="stopGpsBtn" class="btn-secondary" style="display: none;">
                                 ⏹️ Stop Journey
@@ -211,6 +232,30 @@
         </div>
     </main>
 
+    <!-- Google Maps API - Replace with your own API key -->
+    <script>
+        // Initialize fallback map system if Google Maps is not available
+        function initGoogleMaps() {
+            console.log('Google Maps API loaded successfully');
+        }
+        
+        // Load Google Maps API if key is available
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            // For production, add your Google Maps API key here
+            // const script = document.createElement('script');
+            // script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initGoogleMaps&libraries=geometry';
+            // script.async = true;
+            // script.defer = true;
+            // document.head.appendChild(script);
+            
+            // For now, use OpenStreetMap fallback
+            initGoogleMaps();
+        } else {
+            // For local development, use fallback
+            initGoogleMaps();
+        }
+    </script>
+    
     <!-- Firebase Scripts (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>

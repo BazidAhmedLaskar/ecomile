@@ -4,6 +4,15 @@ let gpsStartPosition = null;
 let gpsCurrentPosition = null;
 let isTracking = false;
 
+// Google Maps variables
+let gpsMap = null;
+let startMarker = null;
+let currentMarker = null;
+let pathPolyline = null;
+let pathCoordinates = [];
+let gpsTimer = null;
+let gpsStartTime = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     // Wait for Firebase to load, then check authentication
     const initializeWhenReady = () => {
@@ -270,6 +279,11 @@ function calculatePoints(mode, distance) {
 
 // Old handleManualSubmit function removed - now using 3-phase system
 
+// Initialize Google Maps (called by Google Maps API)
+function initGoogleMaps() {
+    console.log('Google Maps API loaded');
+}
+
 function startGpsTracking() {
     if (!navigator.geolocation) {
         showGpsError('GPS is not supported by this browser.');
@@ -288,8 +302,19 @@ function startGpsTracking() {
     stopBtn.style.display = 'inline-block';
     distanceDisplay.style.display = 'block';
     
+    // Show map container
+    document.getElementById('gpsMapContainer').style.display = 'block';
+    
     statusText.textContent = 'Getting GPS location...';
     isTracking = true;
+    
+    // Initialize GPS timer
+    gpsStartTime = new Date();
+    updateGpsTimer();
+    gpsTimer = setInterval(updateGpsTimer, 1000);
+    
+    // Reset tracking variables
+    pathCoordinates = [];
     
     // Get initial position
     navigator.geolocation.getCurrentPosition(
@@ -299,14 +324,17 @@ function startGpsTracking() {
             statusText.textContent = 'Tracking your journey...';
             console.log('GPS tracking started at:', position.coords);
             
+            // Initialize map with starting position
+            initializeGpsMap(position);
+            
             // Start watching position
             gpsWatchId = navigator.geolocation.watchPosition(
                 updateGpsPosition,
                 handleGpsError,
                 {
                     enableHighAccuracy: true,
-                    maximumAge: 30000,
-                    timeout: 27000
+                    maximumAge: 5000,
+                    timeout: 10000
                 }
             );
         },
@@ -322,22 +350,193 @@ function startGpsTracking() {
     );
 }
 
+function initializeGpsMap(position) {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    
+    try {
+        if (typeof google !== 'undefined' && google.maps) {
+            // Use Google Maps if available
+            initializeGoogleMap(lat, lng);
+        } else {
+            // Use fallback OpenStreetMap
+            initializeFallbackMap(lat, lng);
+        }
+    } catch (error) {
+        console.log('Map initialization failed, using fallback:', error);
+        initializeFallbackMap(lat, lng);
+    }
+}
+
+function initializeGoogleMap(lat, lng) {
+    // Create Google Maps instance
+    gpsMap = new google.maps.Map(document.getElementById('gpsMap'), {
+        zoom: 16,
+        center: { lat, lng },
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        styles: [
+            {
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+            }
+        ]
+    });
+    
+    // Add start marker
+    startMarker = new google.maps.Marker({
+        position: { lat, lng },
+        map: gpsMap,
+        title: 'Journey Start',
+        icon: {
+            url: 'data:image/svg+xml;base64,' + btoa(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="12" fill="#28a745" stroke="white" stroke-width="3"/>
+                    <text x="16" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">S</text>
+                </svg>
+            `),
+            scaledSize: new google.maps.Size(32, 32)
+        }
+    });
+    
+    // Add current position marker
+    currentMarker = new google.maps.Marker({
+        position: { lat, lng },
+        map: gpsMap,
+        title: 'Current Position',
+        icon: {
+            url: 'data:image/svg+xml;base64,' + btoa(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="8" fill="#007bff" stroke="white" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="3" fill="white"/>
+                </svg>
+            `),
+            scaledSize: new google.maps.Size(24, 24)
+        }
+    });
+    
+    // Initialize path
+    pathPolyline = new google.maps.Polyline({
+        path: [{ lat, lng }],
+        geodesic: true,
+        strokeColor: '#28a745',
+        strokeOpacity: 1.0,
+        strokeWeight: 4
+    });
+    pathPolyline.setMap(gpsMap);
+    
+    // Store first coordinate
+    pathCoordinates.push({ lat, lng });
+}
+
+function initializeFallbackMap(lat, lng) {
+    // Create fallback map using OpenStreetMap
+    const mapElement = document.getElementById('gpsMap');
+    
+    mapElement.innerHTML = `
+        <div style="width: 100%; height: 100%; background: #f0f0f0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; max-width: 300px;">
+                <div style="font-size: 2rem; margin-bottom: 10px;">🗺️</div>
+                <h4 style="margin: 0 0 10px 0; color: #333;">GPS Tracking Active</h4>
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">Your location is being tracked. Real-time data will appear below.</p>
+                
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                    <div style="font-size: 0.8rem; color: #888; margin-bottom: 5px;">Current Location</div>
+                    <div style="font-family: monospace; font-size: 0.9rem; color: #333;" id="currentCoords">
+                        ${lat.toFixed(6)}, ${lng.toFixed(6)}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Track visualization -->
+            <div style="position: absolute; top: 20px; left: 20px; background: rgba(40, 167, 69, 0.9); color: white; padding: 8px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+                📍 Journey Started
+            </div>
+        </div>
+    `;
+    
+    // Store first coordinate for fallback
+    pathCoordinates.push({ lat, lng });
+}
+
+function updateGpsTimer() {
+    if (!gpsStartTime) return;
+    
+    const now = new Date();
+    const elapsed = Math.floor((now - gpsStartTime) / 1000);
+    const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const seconds = (elapsed % 60).toString().padStart(2, '0');
+    
+    document.getElementById('gpsElapsedTime').textContent = `${minutes}:${seconds}`;
+}
+
 function updateGpsPosition(position) {
     if (!isTracking) return;
     
+    const prevPosition = gpsCurrentPosition;
     gpsCurrentPosition = position;
     console.log('GPS position updated:', position.coords);
     
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    
+    // Update current position marker and map
+    if (typeof google !== 'undefined' && google.maps && currentMarker) {
+        // Google Maps update
+        currentMarker.setPosition({ lat, lng });
+        
+        // Add to path
+        const newCoord = { lat, lng };
+        pathCoordinates.push(newCoord);
+        
+        // Update polyline path
+        if (pathPolyline) {
+            pathPolyline.setPath(pathCoordinates);
+        }
+        
+        // Center map on current position
+        if (gpsMap) {
+            gpsMap.setCenter({ lat, lng });
+        }
+    } else {
+        // Fallback map update
+        const coordsElement = document.getElementById('currentCoords');
+        if (coordsElement) {
+            coordsElement.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+        }
+        
+        // Add to path for distance calculation
+        pathCoordinates.push({ lat, lng });
+    }
+    
     if (gpsStartPosition) {
-        const distance = calculateGpsDistance(
+        // Calculate total distance from start
+        const totalDistance = calculateGpsDistance(
             gpsStartPosition.coords.latitude,
             gpsStartPosition.coords.longitude,
             position.coords.latitude,
             position.coords.longitude
         );
         
-        document.getElementById('distanceValue').textContent = distance.toFixed(2);
-        console.log('Distance calculated:', distance.toFixed(2), 'km');
+        // Calculate speed if we have previous position
+        let currentSpeed = 0;
+        if (prevPosition && position.timestamp && prevPosition.timestamp) {
+            const timeDiff = (position.timestamp - prevPosition.timestamp) / 1000; // seconds
+            const distanceSegment = calculateGpsDistance(
+                prevPosition.coords.latitude,
+                prevPosition.coords.longitude,
+                position.coords.latitude,
+                position.coords.longitude
+            );
+            currentSpeed = timeDiff > 0 ? (distanceSegment / timeDiff) * 3600 : 0; // km/h
+        }
+        
+        // Update real-time displays
+        document.getElementById('realTimeDistance').textContent = totalDistance.toFixed(2);
+        document.getElementById('currentSpeed').textContent = Math.round(currentSpeed);
+        document.getElementById('distanceValue').textContent = totalDistance.toFixed(2);
+        
+        console.log(`Distance: ${totalDistance.toFixed(2)} km, Speed: ${currentSpeed.toFixed(1)} km/h`);
         
         // Update preview if transport mode is selected
         updateGpsPreview();
@@ -348,6 +547,12 @@ function stopGpsTracking() {
     if (gpsWatchId !== null) {
         navigator.geolocation.clearWatch(gpsWatchId);
         gpsWatchId = null;
+    }
+    
+    // Stop GPS timer
+    if (gpsTimer) {
+        clearInterval(gpsTimer);
+        gpsTimer = null;
     }
     
     isTracking = false;
@@ -377,15 +582,29 @@ function resetGpsTracking() {
     const distanceDisplay = document.getElementById('gpsDistance');
     const completionForm = document.getElementById('gpsCompletionForm');
     const errorDiv = document.getElementById('gpsError');
+    const mapContainer = document.getElementById('gpsMapContainer');
     
     statusText.textContent = 'Ready to start';
     distanceDisplay.style.display = 'none';
     completionForm.style.display = 'none';
     errorDiv.style.display = 'none';
+    mapContainer.style.display = 'none';
     
+    // Reset all displays
     document.getElementById('distanceValue').textContent = '0.0';
+    document.getElementById('realTimeDistance').textContent = '0.0';
+    document.getElementById('currentSpeed').textContent = '0';
+    document.getElementById('gpsElapsedTime').textContent = '00:00';
     document.getElementById('gpsTransportMode').value = '';
     document.getElementById('gpsJourneyNotes').value = '';
+    
+    // Clear map variables
+    gpsMap = null;
+    startMarker = null;
+    currentMarker = null;
+    pathPolyline = null;
+    pathCoordinates = [];
+    gpsStartTime = null;
     
     gpsStartPosition = null;
     gpsCurrentPosition = null;
