@@ -7,6 +7,10 @@ channel = "stable-24_05"
 localPort = 3000
 externalPort = 80
 
+[[ports]]
+localPort = 5000
+externalPort = 5000
+
 [agent]
 integrations = ["javascript_websocket==1.0.0", "javascript_database==1.0.0", "firebase_barebones_javascript==1.0.0"]
 

@@ -1,14 +1,4 @@
-document.getElementById('logoutBtn').addEventListener('click', logout);
-
-function logout() {
-  auth.signOut().then(() => {
-    localStorage.removeItem('ecomiles_user');
-    window.location.href = 'index.html';
-  }).catch(err => {
-    console.error('Error signing out:', err);
-  });
-}
-// Journey tracking functionality
+// Journey tracking functionality - FIXED VERSION
 let gpsWatchId = null;
 let gpsStartPosition = null;
 let gpsCurrentPosition = null;
@@ -22,9 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize journey functionality
     initializeJourney();
-    
-    // Setup logout functionality
-    document.getElementById('logoutBtn').addEventListener('click', logout);
 });
 
 function initializeJourney() {
@@ -139,18 +126,27 @@ async function handleManualSubmit(event) {
         const distance = parseFloat(document.getElementById('distance').value);
         const notes = document.getElementById('journeyNotes').value.trim();
         
+        // Validation
         if (!mode || !distance || distance <= 0) {
             throw new Error('Please fill in all required fields');
         }
         
+        if (distance > 1000) {
+            throw new Error('Distance cannot exceed 1000 km');
+        }
+        
         const points = calculatePoints(mode, distance);
+        
+        console.log('Manual journey data:', { mode, distance, points, notes });
         
         await saveJourney({
             mode,
             distance,
             points,
             notes,
-            type: 'manual'
+            type: 'manual',
+            startLocation: null,
+            endLocation: null
         });
         
         // Show success and redirect
@@ -193,6 +189,7 @@ function startGpsTracking() {
             gpsStartPosition = position;
             gpsCurrentPosition = position;
             statusText.textContent = 'Tracking your journey...';
+            console.log('GPS tracking started at:', position.coords);
             
             // Start watching position
             gpsWatchId = navigator.geolocation.watchPosition(
@@ -206,6 +203,7 @@ function startGpsTracking() {
             );
         },
         (error) => {
+            console.error('GPS error getting initial position:', error);
             handleGpsError(error);
             resetGpsTracking();
         },
@@ -220,6 +218,7 @@ function updateGpsPosition(position) {
     if (!isTracking) return;
     
     gpsCurrentPosition = position;
+    console.log('GPS position updated:', position.coords);
     
     if (gpsStartPosition) {
         const distance = calculateGpsDistance(
@@ -230,6 +229,10 @@ function updateGpsPosition(position) {
         );
         
         document.getElementById('distanceValue').textContent = distance.toFixed(2);
+        console.log('Distance calculated:', distance.toFixed(2), 'km');
+        
+        // Update preview if transport mode is selected
+        updateGpsPreview();
     }
 }
 
@@ -255,6 +258,8 @@ function stopGpsTracking() {
     if (currentDistance > 0) {
         completionForm.style.display = 'block';
     }
+    
+    console.log('GPS tracking stopped. Final distance:', currentDistance);
 }
 
 function resetGpsTracking() {
@@ -300,6 +305,7 @@ function handleGpsError(error) {
             break;
     }
     
+    console.error('GPS Error:', message, error);
     showGpsError(message);
 }
 
@@ -356,11 +362,18 @@ async function handleGpsSubmit() {
         const distance = parseFloat(document.getElementById('distanceValue').textContent);
         const notes = document.getElementById('gpsJourneyNotes').value.trim();
         
+        // Validation
         if (!mode || !distance || distance <= 0) {
-            throw new Error('Please select a transport mode');
+            throw new Error('Please select a transport mode and ensure GPS distance is recorded');
+        }
+        
+        if (distance > 1000) {
+            throw new Error('Distance cannot exceed 1000 km');
         }
         
         const points = calculatePoints(mode, distance);
+        
+        console.log('GPS journey data:', { mode, distance, points, notes, gpsStartPosition, gpsCurrentPosition });
         
         await saveJourney({
             mode,
@@ -370,11 +383,13 @@ async function handleGpsSubmit() {
             type: 'gps',
             startLocation: gpsStartPosition ? {
                 lat: gpsStartPosition.coords.latitude,
-                lon: gpsStartPosition.coords.longitude
+                lng: gpsStartPosition.coords.longitude,
+                address: "GPS Start Location"
             } : null,
             endLocation: gpsCurrentPosition ? {
                 lat: gpsCurrentPosition.coords.latitude,
-                lon: gpsCurrentPosition.coords.longitude
+                lng: gpsCurrentPosition.coords.longitude,
+                address: "GPS End Location"
             } : null
         });
         
@@ -396,18 +411,48 @@ async function saveJourney(journeyData) {
     if (!user) throw new Error('User not authenticated');
     
     try {
-        // Add journey to journeys collection
-        const journeyRef = await db.collection('journeys').add({
+        console.log('Saving journey with user ID:', user.uid);
+        console.log('Journey data:', journeyData);
+        
+        // Prepare start and end locations with proper structure
+        const startLocation = journeyData.startLocation ? {
+            lat: journeyData.startLocation.lat || 0,
+            lng: journeyData.startLocation.lng || 0,
+            address: journeyData.startLocation.address || ""
+        } : {
+            lat: 0,
+            lng: 0,
+            address: ""
+        };
+        
+        const endLocation = journeyData.endLocation ? {
+            lat: journeyData.endLocation.lat || 0,
+            lng: journeyData.endLocation.lng || 0,
+            address: journeyData.endLocation.address || ""
+        } : {
+            lat: 0,
+            lng: 0,
+            address: ""
+        };
+        
+        // Create journey document with proper field names matching database structure
+        const journeyDoc = {
             userId: user.uid,
-            mode: journeyData.mode,
-            distance: journeyData.distance,
-            points: journeyData.points,
+            transportMode: journeyData.mode,
+            distance: journeyData.distance || 0,
+            pointsEarned: journeyData.points || 0,
             notes: journeyData.notes || '',
-            type: journeyData.type || 'manual',
-            startLocation: journeyData.startLocation || null,
-            endLocation: journeyData.endLocation || null,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
+            status: 'completed',
+            startLocation: startLocation,
+            endLocation: endLocation,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        console.log('Journey document to save:', journeyDoc);
+        
+        // Add journey to journeys collection
+        const journeyRef = await db.collection('journeys').add(journeyDoc);
+        console.log('Journey saved with ID:', journeyRef.id);
         
         // Update user stats
         const userRef = db.collection('users').doc(user.uid);
@@ -418,10 +463,20 @@ async function saveJourney(journeyData) {
             roadTaxSaved: firebase.firestore.FieldValue.increment(journeyData.points * 0.1) // ₹0.1 per point
         });
         
+        console.log('User stats updated successfully');
         return journeyRef.id;
         
     } catch (error) {
         console.error('Error saving journey to Firestore:', error);
         throw error;
     }
+}
+
+function logout() {
+    auth.signOut().then(() => {
+        localStorage.removeItem('ecomiles_user');
+        window.location.href = 'index.html';
+    }).catch(err => {
+        console.error('Error signing out:', err);
+    });
 }
