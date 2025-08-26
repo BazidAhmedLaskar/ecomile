@@ -232,28 +232,15 @@
         </div>
     </main>
 
-    <!-- Google Maps API - Replace with your own API key -->
+    <!-- Default Map System -->
     <script>
-        // Initialize fallback map system if Google Maps is not available
+        // Initialize default map system
         function initGoogleMaps() {
-            console.log('Google Maps API loaded successfully');
+            console.log('Default map system initialized');
         }
         
-        // Load Google Maps API if key is available
-        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-            // For production, add your Google Maps API key here
-            // const script = document.createElement('script');
-            // script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initGoogleMaps&libraries=geometry';
-            // script.async = true;
-            // script.defer = true;
-            // document.head.appendChild(script);
-            
-            // For now, use OpenStreetMap fallback
-            initGoogleMaps();
-        } else {
-            // For local development, use fallback
-            initGoogleMaps();
-        }
+        // Use default fallback map system
+        initGoogleMaps();
     </script>
     
     <!-- Firebase Scripts (Compat Version) -->

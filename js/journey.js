@@ -354,18 +354,8 @@ function initializeGpsMap(position) {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     
-    try {
-        if (typeof google !== 'undefined' && google.maps) {
-            // Use Google Maps if available
-            initializeGoogleMap(lat, lng);
-        } else {
-            // Use fallback OpenStreetMap
-            initializeFallbackMap(lat, lng);
-        }
-    } catch (error) {
-        console.log('Map initialization failed, using fallback:', error);
-        initializeFallbackMap(lat, lng);
-    }
+    // Always use the default fallback map
+    initializeFallbackMap(lat, lng);
 }
 
 function initializeGoogleMap(lat, lng) {
@@ -480,34 +470,14 @@ function updateGpsPosition(position) {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     
-    // Update current position marker and map
-    if (typeof google !== 'undefined' && google.maps && currentMarker) {
-        // Google Maps update
-        currentMarker.setPosition({ lat, lng });
-        
-        // Add to path
-        const newCoord = { lat, lng };
-        pathCoordinates.push(newCoord);
-        
-        // Update polyline path
-        if (pathPolyline) {
-            pathPolyline.setPath(pathCoordinates);
-        }
-        
-        // Center map on current position
-        if (gpsMap) {
-            gpsMap.setCenter({ lat, lng });
-        }
-    } else {
-        // Fallback map update
-        const coordsElement = document.getElementById('currentCoords');
-        if (coordsElement) {
-            coordsElement.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-        }
-        
-        // Add to path for distance calculation
-        pathCoordinates.push({ lat, lng });
+    // Update default map system
+    const coordsElement = document.getElementById('currentCoords');
+    if (coordsElement) {
+        coordsElement.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
     }
+    
+    // Add to path for distance calculation
+    pathCoordinates.push({ lat, lng });
     
     if (gpsStartPosition) {
         // Calculate total distance from start
