@@ -1,25 +1,21 @@
 import express from 'express';
 import { createServer } from 'http';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import routes from './routes';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import path from 'path';
+import routes from './routes.js';
 
 const app = express();
 const server = createServer(app);
 
 // Middleware
 app.use(express.json());
-app.use(express.static(join(__dirname, '..')));
+app.use(express.static(path.join(process.cwd())));
 
 // API routes
 app.use(routes);
 
 // Serve HTML files
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(process.cwd(), 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;

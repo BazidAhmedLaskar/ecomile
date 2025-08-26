@@ -38,6 +38,108 @@ app.use((req, res, next) => {
     }
 });
 
+// Middleware for parsing JSON
+app.use(express.json());
+
+// In-memory storage for development (will be replaced with PostgreSQL later)
+const users = new Map();
+const journeys = new Map();
+const vehicles = new Map();
+const drivers = new Map();
+
+// User API routes
+app.get('/api/users/:id', (req, res) => {
+    const user = users.get(req.params.id);
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(user);
+});
+
+app.post('/api/users', (req, res) => {
+    const user = { ...req.body, id: req.body.id || Date.now().toString() };
+    users.set(user.id, user);
+    res.status(201).json(user);
+});
+
+app.put('/api/users/:id', (req, res) => {
+    const user = users.get(req.params.id);
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    const updatedUser = { ...user, ...req.body };
+    users.set(req.params.id, updatedUser);
+    res.json(updatedUser);
+});
+
+// Journey API routes
+app.get('/api/journeys/:userId', (req, res) => {
+    const userJourneys = Array.from(journeys.values())
+        .filter(journey => journey.userId === req.params.userId)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    res.json(userJourneys);
+});
+
+app.post('/api/journeys', (req, res) => {
+    const journey = { ...req.body, id: Date.now().toString(), timestamp: new Date().toISOString() };
+    journeys.set(journey.id, journey);
+    res.status(201).json(journey);
+});
+
+// Vehicle API routes
+app.get('/api/vehicles', (req, res) => {
+    res.json(Array.from(vehicles.values()));
+});
+
+app.get('/api/vehicles/:vehicleId', (req, res) => {
+    const vehicle = Array.from(vehicles.values()).find(v => v.vehicleId === req.params.vehicleId);
+    if (!vehicle) {
+        return res.status(404).json({ error: 'Vehicle not found' });
+    }
+    res.json(vehicle);
+});
+
+app.post('/api/vehicles', (req, res) => {
+    const vehicle = { ...req.body, id: Date.now().toString(), createdAt: new Date().toISOString() };
+    vehicles.set(vehicle.id, vehicle);
+    res.status(201).json(vehicle);
+});
+
+app.put('/api/vehicles/:id', (req, res) => {
+    const vehicle = vehicles.get(req.params.id);
+    if (!vehicle) {
+        return res.status(404).json({ error: 'Vehicle not found' });
+    }
+    const updatedVehicle = { ...vehicle, ...req.body, lastUpdated: new Date().toISOString() };
+    vehicles.set(req.params.id, updatedVehicle);
+    res.json(updatedVehicle);
+});
+
+// Driver API routes
+app.get('/api/drivers/:userId', (req, res) => {
+    const driver = Array.from(drivers.values()).find(d => d.userId === req.params.userId);
+    if (!driver) {
+        return res.status(404).json({ error: 'Driver not found' });
+    }
+    res.json(driver);
+});
+
+app.post('/api/drivers', (req, res) => {
+    const driver = { ...req.body, id: Date.now().toString(), createdAt: new Date().toISOString() };
+    drivers.set(driver.id, driver);
+    res.status(201).json(driver);
+});
+
+app.put('/api/drivers/:id', (req, res) => {
+    const driver = drivers.get(req.params.id);
+    if (!driver) {
+        return res.status(404).json({ error: 'Driver not found' });
+    }
+    const updatedDriver = { ...driver, ...req.body };
+    drivers.set(req.params.id, updatedDriver);
+    res.json(updatedDriver);
+});
+
 // Serve static files
 app.use(express.static(__dirname));
 
@@ -55,4 +157,10 @@ app.listen(PORT, '0.0.0.0', () => {
     } else {
         console.log('⚠️  Firebase configuration incomplete - check environment variables');
     }
+    
+    console.log('🔗 API endpoints available:');
+    console.log('   - GET/POST /api/users/:id');
+    console.log('   - GET/POST /api/journeys/:userId'); 
+    console.log('   - GET/POST /api/vehicles');
+    console.log('   - GET/POST /api/drivers/:userId');
 });
