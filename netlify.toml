@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+  
+[build.environment]
+  VITE_FIREBASE_API_KEY = ""
+  VITE_FIREBASE_PROJECT_ID = ""
+  VITE_FIREBASE_APP_ID = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
