@@ -48,6 +48,7 @@ async function initializeUserData(user) {
         roadTaxSaved: 0,
         journeys: [],
         isActive: true,
+        showInLeaderboard: true, // Privacy setting for leaderboard visibility
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
@@ -209,10 +210,11 @@ async function getDriverByUserId(userId) {
   }
 }
 
-// Leaderboard functions
+// Leaderboard functions - only shows users who opted in
 async function getLeaderboard(limit = 10) {
   try {
     const snapshot = await db.collection('users')
+      .where('showInLeaderboard', '==', true)
       .orderBy('points', 'desc')
       .limit(limit)
       .get();
@@ -224,5 +226,18 @@ async function getLeaderboard(limit = 10) {
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return [];
+  }
+}
+
+// Update user privacy settings
+async function updateUserPrivacy(userId, showInLeaderboard) {
+  try {
+    await db.collection('users').doc(userId).update({
+      showInLeaderboard: showInLeaderboard
+    });
+    return true;
+  } catch (error) {
+    console.error('Error updating privacy settings:', error);
+    return false;
   }
 }
