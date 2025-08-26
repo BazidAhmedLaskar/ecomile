@@ -63,6 +63,7 @@ function setupAuthObserver() {
   if (!auth) return;
   
   auth.onAuthStateChanged((user) => {
+    console.log('Auth state changed:', user ? 'logged in' : 'logged out');
     if (user) {
       const userData = {
         uid: user.uid,
@@ -71,9 +72,11 @@ function setupAuthObserver() {
         photoURL: user.photoURL
       };
       localStorage.setItem('ecomiles_user', JSON.stringify(userData));
+      console.log('User data saved to localStorage:', userData);
       initializeUserData(user);
     } else {
       localStorage.removeItem('ecomiles_user');
+      console.log('User data removed from localStorage');
     }
   });
 }
@@ -121,14 +124,45 @@ function getCurrentUser() {
 }
 
 function isUserLoggedIn() {
-  return getCurrentUser() !== null;
+  // Check both localStorage and Firebase auth state
+  const localUser = getCurrentUser();
+  const firebaseUser = auth && auth.currentUser;
+  
+  return localUser !== null || firebaseUser !== null;
 }
 
 function requireAuth() {
-  if (!isUserLoggedIn()) {
+  // Give Firebase time to initialize and check auth state
+  if (typeof firebase === 'undefined') {
+    console.log('Firebase not loaded yet, waiting...');
+    setTimeout(() => {
+      if (!isUserLoggedIn()) {
+        window.location.href = 'login.html';
+      }
+    }, 1000);
+    return true; // Don't redirect immediately
+  }
+  
+  // Check both localStorage and Firebase auth state
+  const localUser = getCurrentUser();
+  const firebaseUser = auth && auth.currentUser;
+  
+  if (!localUser && !firebaseUser) {
     window.location.href = 'login.html';
     return false;
   }
+  
+  // If we have Firebase user but no localStorage, sync it
+  if (firebaseUser && !localUser) {
+    const userData = {
+      uid: firebaseUser.uid,
+      name: firebaseUser.displayName,
+      email: firebaseUser.email,
+      photoURL: firebaseUser.photoURL
+    };
+    localStorage.setItem('ecomiles_user', JSON.stringify(userData));
+  }
+  
   return true;
 }
 

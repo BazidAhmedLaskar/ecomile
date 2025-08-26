@@ -5,13 +5,21 @@ let gpsCurrentPosition = null;
 let isTracking = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Check authentication
-    if (!requireAuth()) {
-        return;
-    }
+    // Wait for Firebase to initialize before checking auth
+    const checkAuthAndInit = () => {
+        if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+            if (!requireAuth()) {
+                return;
+            }
+            // Initialize journey functionality
+            initializeJourney();
+        } else {
+            // Wait a bit more for Firebase to load
+            setTimeout(checkAuthAndInit, 500);
+        }
+    };
     
-    // Initialize journey functionality
-    initializeJourney();
+    checkAuthAndInit();
 });
 
 function initializeJourney() {

@@ -1,12 +1,28 @@
 // Driver setup functionality
 document.addEventListener('DOMContentLoaded', () => {
-    if (!requireAuth()) return;
+    // Wait for Firebase to load, then check authentication
+    const initializeWhenReady = () => {
+        if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    console.log('User authenticated:', user.uid);
+                    // Check if user is already a verified driver
+                    checkExistingDriver();
+                    
+                    // Setup form handling
+                    setupDriverForm();
+                } else {
+                    console.log('No user found, redirecting to login');
+                    window.location.href = 'login.html';
+                }
+            });
+        } else {
+            // Wait for Firebase to load
+            setTimeout(initializeWhenReady, 500);
+        }
+    };
     
-    // Check if user is already a verified driver
-    checkExistingDriver();
-    
-    // Setup form handling
-    setupDriverForm();
+    initializeWhenReady();
 });
 
 async function checkExistingDriver() {

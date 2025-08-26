@@ -313,25 +313,38 @@
             let totalJourneys = 0;
             let allJourneys = [];
 
-            document.addEventListener("DOMContentLoaded", async () => {
-                // Check authentication
-                if (!requireAuth()) {
-                    return;
-                }
+            document.addEventListener("DOMContentLoaded", () => {
+                // Wait for Firebase to load, then check authentication
+                const initializeWhenReady = () => {
+                    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                        firebase.auth().onAuthStateChanged(async (user) => {
+                            if (user) {
+                                console.log('User authenticated:', user.uid);
+                                // Setup logout functionality
+                                document
+                                    .getElementById("logoutBtn")
+                                    .addEventListener("click", logout);
+                                document
+                                    .getElementById("logoutBtn2")
+                                    .addEventListener("click", logout);
 
-                // Setup logout functionality
-                document
-                    .getElementById("logoutBtn")
-                    .addEventListener("click", logout);
-                document
-                    .getElementById("logoutBtn2")
-                    .addEventListener("click", logout);
+                                // Setup other actions
+                                setupProfileActions();
 
-                // Setup other actions
-                setupProfileActions();
-
-                // Load profile data
-                await loadProfileData();
+                                // Load profile data
+                                await loadProfileData();
+                            } else {
+                                console.log('No user found, redirecting to login');
+                                window.location.href = 'login.html';
+                            }
+                        });
+                    } else {
+                        // Wait for Firebase to load
+                        setTimeout(initializeWhenReady, 500);
+                    }
+                };
+                
+                initializeWhenReady();
             });
 
             function setupProfileActions() {

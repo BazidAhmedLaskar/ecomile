@@ -10,8 +10,25 @@ function logout() {
 }
 // Real-time Map tracking with speed verification
 document.addEventListener('DOMContentLoaded', () => {
-    if (!requireAuth()) return;
-    initializeRealtimeMap();
+    // Wait for Firebase to load, then check authentication
+    const initializeWhenReady = () => {
+        if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    console.log('User authenticated:', user.uid);
+                    initializeRealtimeMap();
+                } else {
+                    console.log('No user found, redirecting to login');
+                    window.location.href = 'login.html';
+                }
+            });
+        } else {
+            // Wait for Firebase to load
+            setTimeout(initializeWhenReady, 500);
+        }
+    };
+    
+    initializeWhenReady();
 });
 
 let realtimeMap = null;
