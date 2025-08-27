@@ -145,10 +145,45 @@ function updateStatCards(data) {
     const co2SavedEl = document.getElementById('co2Saved');
     const roadTaxSavedEl = document.getElementById('roadTaxSaved');
     
-    if (totalPointsEl) totalPointsEl.textContent = (data.points || 0).toLocaleString();
-    if (totalDistanceEl) totalDistanceEl.textContent = `${(data.totalDistance || 0).toFixed(1)} km`;
-    if (co2SavedEl) co2SavedEl.textContent = `${((data.totalDistance || 0) * 0.21).toFixed(1)} kg`;
-    if (roadTaxSavedEl) roadTaxSavedEl.textContent = `₹${(data.roadTaxSaved || 0).toFixed(0)}`;
+    // Animate counting up to actual values
+    if (totalPointsEl) {
+        animateCounter(totalPointsEl, 0, data.points || 0, 1000, (val) => val.toLocaleString());
+    }
+    if (totalDistanceEl) {
+        animateCounter(totalDistanceEl, 0, data.totalDistance || 0, 1200, (val) => `${val.toFixed(1)} km`);
+    }
+    if (co2SavedEl) {
+        const co2Value = (data.totalDistance || 0) * 0.21;
+        animateCounter(co2SavedEl, 0, co2Value, 1400, (val) => `${val.toFixed(1)} kg`);
+    }
+    if (roadTaxSavedEl) {
+        animateCounter(roadTaxSavedEl, 0, data.roadTaxSaved || 0, 1600, (val) => `₹${val.toFixed(0)}`);
+    }
+}
+
+// Counting animation function
+function animateCounter(element, startValue, endValue, duration, formatter) {
+    const startTime = Date.now();
+    const difference = endValue - startValue;
+    
+    function updateCounter() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function for smooth animation (ease-out)
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        const currentValue = startValue + (difference * easeProgress);
+        
+        element.textContent = formatter ? formatter(currentValue) : Math.round(currentValue);
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+        } else {
+            element.textContent = formatter ? formatter(endValue) : endValue;
+        }
+    }
+    
+    updateCounter();
 }
 
 async function loadRecentJourneys(uid) {

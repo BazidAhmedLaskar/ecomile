@@ -57,8 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add current page highlighting
     highlightCurrentPage();
     
-    // Initialize global dashboard
-    setTimeout(initializeGlobalDashboard, 1500);
+    // Status widget removed as requested
 });
 
 // Highlight current page in navigation
@@ -76,81 +75,7 @@ function highlightCurrentPage() {
     });
 }
 
-// Simplified Dashboard for all pages
-function initializeGlobalDashboard() {
-    // Remove the inconvenient live status dashboard
-    // Only show basic user stats without live tracking
-    createSimpleStatsWidget();
-    loadUserStats();
-}
-
-function createSimpleStatsWidget() {
-    // Only create if not already exists
-    if (document.getElementById('globalStatsWidget')) return;
-    
-    const widget = document.createElement('div');
-    widget.id = 'globalStatsWidget';
-    widget.innerHTML = `
-        <div style="position: fixed; top: 70px; right: 20px; z-index: 1000; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 12px; min-width: 160px; font-size: 0.85rem; border: 1px solid #ddd;">
-            <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                <span style="font-size: 1rem; margin-right: 6px;">📊</span>
-                <strong style="color: #28a745; font-size: 0.9rem;">My Stats</strong>
-                <button onclick="toggleGlobalStats()" style="background: none; border: none; margin-left: auto; font-size: 0.9rem; cursor: pointer;">−</button>
-            </div>
-            <div id="globalStatsContent">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px;">
-                    <div style="text-align: center; padding: 6px; background: #f8f9fa; border-radius: 4px;">
-                        <div style="font-weight: bold; color: #28a745; font-size: 0.9rem;" id="globalPoints">-</div>
-                        <div style="font-size: 0.7rem; color: #666;">Points</div>
-                    </div>
-                    <div style="text-align: center; padding: 6px; background: #f8f9fa; border-radius: 4px;">
-                        <div style="font-weight: bold; color: #007bff; font-size: 0.9rem;" id="globalDistance">-</div>
-                        <div style="font-size: 0.7rem; color: #666;">km</div>
-                    </div>
-                </div>
-                <div style="text-align: center; padding: 6px; background: #e8f5e8; border-radius: 4px;">
-                    <div style="font-weight: bold; color: #155724; font-size: 0.9rem;" id="globalTaxSaved">₹-</div>
-                    <div style="font-size: 0.7rem; color: #666;">Tax Saved</div>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(widget);
-}
-
-function toggleGlobalStats() {
-    const content = document.getElementById('globalStatsContent');
-    const button = document.querySelector('#globalStatsWidget button');
-    
-    if (content.style.display === 'none') {
-        content.style.display = 'block';
-        button.textContent = '−';
-    } else {
-        content.style.display = 'none';
-        button.textContent = '+';
-    }
-}
-
-async function loadUserStats() {
-    try {
-        const user = firebase.auth().currentUser;
-        if (!user) return;
-        
-        const db = firebase.firestore();
-        const userDoc = await db.collection('users').doc(user.uid).get();
-        
-        if (userDoc.exists) {
-            const userData = userDoc.data();
-            document.getElementById('globalPoints').textContent = userData.points || 0;
-            document.getElementById('globalDistance').textContent = (userData.totalDistance || 0).toFixed(1);
-            document.getElementById('globalTaxSaved').textContent = `₹${userData.roadTaxSaved || 0}`;
-        }
-    } catch (error) {
-        console.log('Error loading user stats:', error);
-    }
-}
-
-// Removed live journey stats tracking as it was inconvenient
+// Status widget completely removed as requested
 
 // Global logout function (works across all pages)
 function logout() {
