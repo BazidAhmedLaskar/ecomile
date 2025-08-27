@@ -3,6 +3,7 @@ let gpsWatchId = null;
 let gpsStartPosition = null;
 let gpsCurrentPosition = null;
 let isTracking = false;
+let totalDistance = 0;
 
 // Google Maps variables
 let gpsMap = null;
@@ -280,6 +281,22 @@ function calculatePoints(mode, distance) {
     return Math.round(pointsPerKm * distance);
 }
 
+// Haversine formula to calculate distance between two GPS coordinates
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const distance = R * c; // Distance in kilometers
+    
+    return distance;
+}
+
 // Old handleManualSubmit function removed - now using 3-phase system
 
 // Initialize Google Maps (called by Google Maps API)
@@ -318,6 +335,7 @@ function startGpsTracking() {
     
     // Reset tracking variables
     pathCoordinates = [];
+    totalDistance = 0;
     
     // Get initial position
     navigator.geolocation.getCurrentPosition(
@@ -448,8 +466,26 @@ function initializeFallbackMap(lat, lng) {
         </div>
     `;
     
-        // Store first coordinate for fallback
+            // Store coordinate for path tracking
     pathCoordinates.push({ lat, lng });
+    
+    // Calculate and display current speed if we have enough data
+    if (pathCoordinates.length >= 2 && gpsStartTime) {
+        const timeElapsed = (new Date() - gpsStartTime) / 1000; // seconds
+        const currentSpeed = totalDistance > 0 ? (totalDistance / timeElapsed) * 3600 : 0; // km/h
+        
+        // Update speed display
+        const speedEl = document.getElementById('realTimeSpeed');
+        if (speedEl) {
+            speedEl.textContent = currentSpeed.toFixed(1);
+        }
+        
+        // Auto-detect and suggest transport mode
+        const suggestedMode = detectTransportMode(currentSpeed, totalDistance);
+        if (suggestedMode) {
+            updateTransportModeSuggestion(suggestedMode, currentSpeed);
+        }
+    }
 }
 
 // Manual journey verification map
@@ -512,7 +548,10 @@ function updateGpsTimer() {
     const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
     const seconds = (elapsed % 60).toString().padStart(2, '0');
     
-    document.getElementById('gpsElapsedTime').textContent = `${minutes}:${seconds}`;
+    const timerElement = document.getElementById('gpsElapsedTime');
+    if (timerElement) {
+        timerElement.textContent = `${minutes}:${seconds}`;
+    }
 }
 
 function updateGpsPosition(position) {
@@ -529,6 +568,31 @@ function updateGpsPosition(position) {
     const coordsElement = document.getElementById('currentCoords');
     if (coordsElement) {
         coordsElement.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    }
+    
+    // Calculate distance if we have a previous position
+    if (prevPosition) {
+        const distance = calculateDistance(
+            prevPosition.coords.latitude,
+            prevPosition.coords.longitude,
+            lat,
+            lng
+        );
+        
+        // Add to total distance
+        totalDistance += distance;
+        
+        // Update distance display
+        const distanceEl = document.getElementById('realTimeDistance');
+        if (distanceEl) {
+            distanceEl.textContent = totalDistance.toFixed(2);
+        }
+        
+        // Update hidden distance value for form submission
+        const distanceValue = document.getElementById('distanceValue');
+        if (distanceValue) {
+            distanceValue.textContent = totalDistance.toFixed(2);
+        }
     }
     
     // Add to path for distance calculation
@@ -670,6 +734,10 @@ function getModeDisplayName(mode) {
 
 function resetGpsTracking() {
     stopGpsTracking();
+    
+    // Reset tracking variables
+    totalDistance = 0;
+    pathCoordinates = [];
     
     const statusText = document.getElementById('gpsStatusText');
     const distanceDisplay = document.getElementById('gpsDistance');
