@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Urban Standstill: The Problems We Face - EcoMiles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            padding: 0 1.5rem;
+        }
+        .card.active .card-content {
+            max-height: 1000px; /* Large enough to not clip content */
+            padding: 1.5rem 1.5rem;
+        }
+        .card.active .arrow {
+            transform: rotate(180deg);
+        }
+        .arrow {
+            transition: transform 0.3s ease-in-out;
+        }
+        .reference-link {
+            color: #1d4ed8;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .reference-link:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>🌱 EcoMiles</h1>
+                </div>
+            </div>
+        </nav>
+    </header>
+ 
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12 md:py-16">
+        <section class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">The Urban Standstill</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Our cities are at a breaking point. Explore the data to understand the true cost of traffic on our economy, environment, and daily lives.</p>
+        </section>
+
+        <!-- Problems Section -->
+        <div class="space-y-12">
+
+            <!-- 1. Traffic Congestion -->
+            <section id="congestion">
+                <div class="flex items-center mb-6">
+                    <div class="bg-red-100 p-3 rounded-full mr-4">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">The Urban Gridlock: A Crisis of Time</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Card: Travel Time -->
+                    <div class="card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer" onclick="toggleCard(this)">
+                        <div class="p-6 flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-gray-800">Slowest Cities in India</h3>
+                            <div class="arrow w-6 h-6 text-gray-500">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="card-content bg-gray-50">
+                            <ul class="space-y-4 text-gray-700">
+                                <li><strong>Kolkata:</strong> India's most congested city. It takes an average of <span class="font-bold text-red-600">34 min 33 sec</span> to travel just 10 km. <a href="https://indianexpress.com/article/trending/top-10-listing/top-10-indian-cities-with-slowest-traffic-in-2024-25-bengaluru-mumbai-slip-from-1-spot-9776331/" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Bengaluru:</strong> The 2nd most congested city in India. A 10 km journey takes <span class="font-bold text-red-600">34 min 10 sec</span> on average. <a href="https://www.business-standard.com/india-news/kolkata-india-s-most-congested-city-in-2024-bengaluru-s-traffic-speed-improves-tomtom-125011200207_1.html" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Mumbai:</strong> Commuters take <span class="font-bold text-red-600">29 min 26 sec</span> for a 10 km trip in India's financial capital. <a href="https://m.economictimes.com/news/india/bengaluru-no-more-the-most-congested-city-in-india-this-city-tops-the-list/articleshow/117168327.cms" target="_blank" class="reference-link">[ref]</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Card: Time Lost -->
+                    <div class="card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer" onclick="toggleCard(this)">
+                        <div class="p-6 flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-gray-800">The Human Cost: Time Lost Forever</h3>
+                            <div class="arrow w-6 h-6 text-gray-500">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="card-content bg-gray-50">
+                            <p class="mb-4 text-gray-700">This lost time translates to days of life wasted every year:</p>
+                             <ul class="space-y-4 text-gray-700">
+                                <li><strong>Bengaluru:</strong> Commuters lose <span class="font-bold text-red-600">117 hours</span> annually in rush hour traffic, equivalent to over 14 full workdays. <a href="https://indianexpress.com/article/trending/top-10-listing/top-10-indian-cities-with-slowest-traffic-in-2024-25-bengaluru-mumbai-slip-from-1-spot-9776331/" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Kolkata:</strong> <span class="font-bold text-red-600">110 hours</span> lost per year during peak hours. <a href="https://www.business-standard.com/india-news/kolkata-india-s-most-congested-city-in-2024-bengaluru-s-traffic-speed-improves-tomtom-125011200207_1.html" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Mumbai:</strong> A commuter forfeits <span class="font-bold text-red-600">103 hours</span> per year, or nearly 13 workdays. <a href="https://www.indiatoday.in/diu/story/traffic-is-choking-indian-cities-but-there-may-be-a-radical-solution-2759488-2025-07-22" target="_blank" class="reference-link">[ref]</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Air Pollution -->
+            <section id="pollution">
+                <div class="flex items-center mb-6">
+                    <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">The Air We Breathe: A Public Health Crisis</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Card: PM2.5 Contribution -->
+                    <div class="card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer" onclick="toggleCard(this)">
+                        <div class="p-6 flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-gray-800">Vehicles' Role in Deadly PM2.5 Pollution</h3>
+                            <div class="arrow w-6 h-6 text-gray-500">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="card-content bg-gray-50">
+                            <p class="mb-4 text-gray-700">Vehicles are a primary source of PM2.5, fine particles that penetrate deep into our lungs and bloodstream.</p>
+                             <ul class="space-y-4 text-gray-700">
+                                <li><strong>Bengaluru:</strong> Vehicle exhaust and road dust account for an alarming <span class="font-bold text-yellow-600">56%</span> of total PM2.5 pollution. <a href="https://cp-catapult.s3.amazonaws.com/uploads/2021/01/2018-12-UEinfo-APnA-Bengaluru-Web.pdf" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Delhi:</strong> The transport sector contributes up to <span class="font-bold text-yellow-600">40%</span> of the city's PM2.5 emissions. <a href="https://www.downtoearth.org.in/air/mobility-crisis-is-fuelling-delhis-pollution-levels-despite-tech-fixes-finds-cse-analysis" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Hyderabad:</strong> Vehicle exhaust is responsible for approximately <span class="font-bold text-yellow-600">30%</span> of PM2.5 pollution. <a href="https://urbanemissions.info/india-apna/hyderabad-india/" target="_blank" class="reference-link">[ref]</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Card: PM10 Contribution -->
+                    <div class="card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer" onclick="toggleCard(this)">
+                        <div class="p-6 flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-gray-800">The Hidden Danger: Road Dust (PM10)</h3>
+                            <div class="arrow w-6 h-6 text-gray-500">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="card-content bg-gray-50">
+                             <p class="mb-4 text-gray-700">Even electric vehicles contribute to pollution by stirring up road dust (PM10).</p>
+                             <ul class="space-y-4 text-gray-700">
+                                <li><strong>Hyderabad:</strong> Vehicle exhaust and resuspended road dust together contribute over <span class="font-bold text-yellow-600">60%</span> of the total PM10 load. <a href="https://pubmed.ncbi.nlm.nih.gov/23132755/" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Delhi:</strong> Vehicles and associated road dust account for <span class="font-bold text-yellow-600">~47%</span> of PM10 pollution. <a href="https://www.business-standard.com/india-news/caqm-revisits-study-vehicles-dust-industries-lead-delhi-ncr-pollution-124100100268_1.html" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Mumbai:</strong> Resuspended road dust is the predominant contributor to the city's PM10 pollution. <a href="https://www.mpcb.gov.in/sites/default/files/inline-files/Final_SA%20%26%20EI%20Report_Mumbai.pdf" target="_blank" class="reference-link">[ref]</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Economic Impact -->
+            <section id="economy">
+                <div class="flex items-center mb-6">
+                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-1 1-1-1H6a3 3 0 010-6h3l1-1 1 1z"></path></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">The Economic Toll: A Drain on Our Nation</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Card: Macroeconomic Loss -->
+                    <div class="card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer" onclick="toggleCard(this)">
+                        <div class="p-6 flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-gray-800">The Multi-Billion Dollar Drain</h3>
+                            <div class="arrow w-6 h-6 text-gray-500">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="card-content bg-gray-50">
+                            <ul class="space-y-4 text-gray-700">
+                                <li><strong>National Impact:</strong> Traffic congestion in just Delhi, Mumbai, Bengaluru, and Kolkata costs the Indian economy <span class="font-bold text-green-600">₹1.47 lakh crore ($22 billion)</span> annually. <a href="https://qz.com/india/1255427/traffic-jams-in-delhi-mumbai-bengaluru-and-kolkata-alone-cost-india-22-billion-a-year" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Bengaluru's Loss:</strong> The city's economy suffers an annual loss of nearly <span class="font-bold text-green-600">₹20,000 crore</span> due to its severe traffic problems. <a href="https://www.indiatoday.in/india/story/bengaluru-traffic-woes-impacts-economy-hit-rs-200000-study-2417410-2023-08-07" target="_blank" class="reference-link">[ref]</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Card: Fuel Wastage -->
+                    <div class="card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer" onclick="toggleCard(this)">
+                        <div class="p-6 flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-gray-800">Fuel & Productivity Burned Away</h3>
+                            <div class="arrow w-6 h-6 text-gray-500">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="card-content bg-gray-50">
+                            <ul class="space-y-4 text-gray-700">
+                                <li><strong>Delhi's Fuel Waste:</strong> A single major traffic jam can waste <span class="font-bold text-green-600">46,000 litres of fuel</span>, costing commuters ₹44 lakhs in a few hours. <a href="https://timesofindia.indiatimes.com/city/delhi/time-not-only-thing-you-lose-in-traffic-jam/articleshow/119173991.cms" target="_blank" class="reference-link">[ref]</a></li>
+                                <li><strong>Delhi's Productivity Loss:</strong> Congestion costs a skilled worker up to <span class="font-bold text-green-600">₹26,600 per year</span>, which is nearly 12% of their monthly take-home pay. <a href="https://www.downtoearth.org.in/air/mobility-crisis-is-fuelling-delhis-pollution-levels-despite-tech-fixes-finds-cse-analysis" target="_blank" class="reference-link">[ref]</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="text-lg font-semibold">Ready to be the change?</p>
+            <p class="mt-2 text-gray-300">Download EcoMiles today and turn your sustainable commute into rewards.</p>
+            <div class="mt-6">
+                <a href="#" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Join the Movement</a>
+            </div>
+            <p class="mt-8 text-sm text-gray-400">&copy; 2025 EcoMiles. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to toggle the active class on the card for the accordion effect.
+        function toggleCard(element) {
+            // Close all other cards in the same section
+            const parentSection = element.closest('section');
+            const allCards = parentSection.querySelectorAll('.card');
+            allCards.forEach(card => {
+                if (card !== element && card.classList.contains('active')) {
+                    card.classList.remove('active');
+                }
+            });
+
+            // Toggle the clicked card
+            element.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>
