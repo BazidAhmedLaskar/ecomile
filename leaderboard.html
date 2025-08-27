@@ -181,11 +181,28 @@
             initializeWhenReady();
         });
 
+        // Helper function to get current user
+        function getCurrentUser() {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                return {
+                    uid: user.uid,
+                    name: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL
+                };
+            }
+            return null;
+        }
+
         async function loadLeaderboard() {
             const loadingDiv = document.getElementById('loadingMessage');
             const errorDiv = document.getElementById('errorMessage');
             const leaderboardBody = document.getElementById('leaderboardBody');
             const currentUser = getCurrentUser();
+            
+            // Initialize Firestore database
+            const db = firebase.firestore();
             
             try {
                 loadingDiv.style.display = 'block';

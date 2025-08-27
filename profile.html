@@ -347,6 +347,20 @@
                 initializeWhenReady();
             });
 
+            // Helper function to get current user
+            function getCurrentUser() {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    return {
+                        uid: user.uid,
+                        name: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL
+                    };
+                }
+                return null;
+            }
+
             function setupProfileActions() {
                 document
                     .getElementById("showAllJourneys")
@@ -369,6 +383,9 @@
                 try {
                     const user = getCurrentUser();
                     if (!user) return;
+
+                    // Initialize Firestore database
+                    const db = firebase.firestore();
 
                     // Update profile header
                     updateProfileHeader(user);
@@ -427,6 +444,9 @@
 
             async function loadJourneyHistory(userId, showAll = false) {
                 try {
+                    // Initialize Firestore database
+                    const db = firebase.firestore();
+                    
                     const journeysRef = db
                         .collection("journeys")
                         .where("userId", "==", userId)
@@ -581,6 +601,9 @@
                     const user = getCurrentUser();
                     if (!user) return;
 
+                    // Initialize Firestore database
+                    const db = firebase.firestore();
+
                     const userRef = db.collection("users").doc(user.uid);
                     const userDoc = await userRef.get();
                     const userData = userDoc.exists ? userDoc.data() : {};
@@ -623,6 +646,9 @@
                 ) {
                     return;
                 }
+
+                // Initialize Firestore database
+                const db = firebase.firestore();
 
                 if (
                     !confirm(
