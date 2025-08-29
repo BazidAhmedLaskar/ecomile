@@ -7,74 +7,121 @@
     <meta name="description" content="Track your eco-friendly transportation choices, earn points for sustainable travel, and save on road tax with EcoMiles.">
     <link rel="stylesheet" href="css/styles.css">
     <style>
-       /* Add this to your styles.css file or within the <style> tags */
+        /*
+        The animations defined in your previously provided CSS file are already quite comprehensive.
+        I'm adding some specific animation delays here to ensure a staggered effect for the landing page elements.
+        Make sure the 'styles.css' file contains all the @keyframes for 'fadeIn', 'slideUp', etc.,
+        as provided in your initial CSS input.
+        */
 
-/* Keyframes for the rainbow rotation animation */
-@keyframes rotateRainbow {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
+        /* Hero Section Animations */
+        .hero h2 {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0; /* Start hidden */
+            animation-delay: 0.2s;
+        }
 
-/* Base styles for elements that will have the rainbow hover effect */
-.feature-card,
-.cta-button,
-.benefit {
-    position: relative; /* Needed for pseudo-elements positioning */
-    overflow: hidden; /* Ensures the gradient stays within bounds */
-    transition: all 0.3s ease-in-out; /* Smooth transition for other hover effects */
-    z-index: 1; /* Ensure content is above the pseudo-element */
-}
+        .hero-subtitle {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            animation-delay: 0.4s;
+        }
 
-.feature-card::before,
-.cta-button::before,
-.benefit::before {
-    content: '';
-    position: absolute;
-    top: -5px; /* Adjust to control how much border shows */
-    left: -5px; /* Adjust to control how much border shows */
-    right: -5px; /* Adjust to control how much border shows */
-    bottom: -5px; /* Adjust to control how much border shows */
-    border-radius: inherit; /* Inherit border-radius from the parent element */
-    background: linear-gradient(
-        45deg,
-        #ff0000, /* Red */
-        #ff7f00, /* Orange */
-        #ffff00, /* Yellow */
-        #00ff00, /* Green */
-        #0000ff, /* Blue */
-        #4b0082, /* Indigo */
-        #9400d3 /* Violet */
-    );
-    background-size: 200% 200%; /* Make gradient larger than element to allow movement */
-    opacity: 0; /* Start hidden */
-    z-index: -1; /* Place behind the content */
-    filter: blur(8px); /* Add a blur effect for a softer glow */
-    transition: opacity 0.3s ease-in-out;
-}
+        /* Features Grid Staggered Animation (already defined in your CSS but re-emphasizing) */
+        .features-grid .feature-card {
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+        .features-grid .feature-card:nth-child(1) { animation-delay: 0.6s; }
+        .features-grid .feature-card:nth-child(2) { animation-delay: 0.7s; }
+        .features-grid .feature-card:nth-child(3) { animation-delay: 0.8s; }
+        .features-grid .feature-card:nth-child(4) { animation-delay: 0.9s; }
+        .features-grid .feature-card:nth-child(5) { animation-delay: 1.0s; }
+        .features-grid .feature-card:nth-child(6) { animation-delay: 1.1s; }
 
-/* Hover effect */
-.feature-card:hover::before,
-.cta-button:hover::before,
-.benefit:hover::before {
-    opacity: 1; /* Show on hover */
-    animation: rotateRainbow 2s linear infinite; /* Apply rotation animation */
-}
 
-/* Optional: Add some subtle scaling or shadow for the cards/buttons themselves on hover */
-.feature-card:hover,
-.benefit:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
+        /* CTA Section Animation */
+        .cta-section {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            animation-delay: 1.3s;
+        }
 
-.cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
+        /* Benefits Section Staggered Animation */
+        .benefits h2 {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            animation-delay: 1.5s;
+        }
+
+        .benefits-grid .benefit {
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+        .benefits-grid .benefit:nth-child(1) { animation-delay: 1.7s; }
+        .benefits-grid .benefit:nth-child(2) { animation-delay: 1.8s; }
+        .benefits-grid .benefit:nth-child(3) { animation-delay: 1.9s; }
+        .benefits-grid .benefit:nth-child(4) { animation-delay: 2.0s; }
+
+        /* --- Styles for Rainbow Hover Effect --- */
+
+        /* 1. Change cursor to a pointer on hover for specified elements */
+        .feature-card, .benefit, .cta-button {
+            cursor: pointer;
+        }
+
+        /* 2. Prepare elements for the animated border effect */
+        .feature-card, .benefit, .cta-button {
+            position: relative; /* Essential for positioning the ::before pseudo-element */
+            z-index: 0;
+            overflow: hidden; /* Clips the pseudo-element to the border-radius */
+            border-radius: 16px; /* A nice, modern radius for the effect */
+        }
+
+        /* 3. This is the animated gradient pseudo-element that creates the border */
+        .feature-card::before,
+        .benefit::before,
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            z-index: -1; /* Places it behind the element's own background */
+            
+            /* Make it slightly larger than the parent to create the border effect */
+            top: -3px;
+            left: -3px;
+            width: calc(100% + 6px);
+            height: calc(100% + 6px);
+            
+            /* The conic gradient for the rainbow effect. I've chosen a vibrant palette. */
+            background: conic-gradient(
+                from 180deg at 50% 50%,
+                #FF007A, #F48C06, #F9DC5C, #00F5D4, #00B2FF, #8338EC, #FF007A
+            );
+            
+            /* Animation definition */
+            animation: rotate-gradient 3s linear infinite;
+            
+            /* Hide by default, then fade in smoothly on hover */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 4. On hover, reveal the animated border */
+        .feature-card:hover::before,
+        .benefit:hover::before,
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+
+        /* 5. Keyframes for the rotation animation */
+        @keyframes rotate-gradient {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
