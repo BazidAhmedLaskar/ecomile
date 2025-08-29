@@ -6,7 +6,7 @@
     <title>EcoMiles - Sustainable Transportation Tracking</title>
     <meta name="description" content="Track your eco-friendly transportation choices, earn points for sustainable travel, and save on road tax with EcoMiles.">
     <link rel="stylesheet" href="css/styles.css">
-    <style>
+     <style>
         /*
         The animations defined in your previously provided CSS file are already quite comprehensive.
         I'm adding some specific animation delays here to ensure a staggered effect for the landing page elements.
@@ -65,51 +65,71 @@
 
         /* --- Styles for Rainbow Hover Effect --- */
 
-        /* 1. Change cursor to a pointer on hover for specified elements */
+        /* 1. Change cursor and set up positioning context */
         .feature-card, .benefit, .cta-button {
             cursor: pointer;
-        }
-
-        /* 2. Prepare elements for the animated border effect */
-        .feature-card, .benefit, .cta-button {
-            position: relative; /* Essential for positioning the ::before pseudo-element */
+            position: relative; /* Required for pseudo-elements */
             z-index: 0;
-            overflow: hidden; /* Clips the pseudo-element to the border-radius */
             border-radius: 16px; /* A nice, modern radius for the effect */
+            overflow: hidden; /* Keeps the effect contained */
         }
 
-        /* 3. This is the animated gradient pseudo-element that creates the border */
+        /* 2. This is the animated gradient that will form the border */
         .feature-card::before,
         .benefit::before,
         .cta-button::before {
             content: '';
             position: absolute;
-            z-index: -1; /* Places it behind the element's own background */
-            
-            /* Make it slightly larger than the parent to create the border effect */
-            top: -3px;
-            left: -3px;
-            width: calc(100% + 6px);
-            height: calc(100% + 6px);
-            
-            /* The conic gradient for the rainbow effect. I've chosen a vibrant palette. */
+            z-index: -2; /* Positioned behind the card's background mask */
+            left: -50%;
+            top: -50%;
+            width: 200%;
+            height: 200%;
             background: conic-gradient(
                 from 180deg at 50% 50%,
                 #FF007A, #F48C06, #F9DC5C, #00F5D4, #00B2FF, #8338EC, #FF007A
             );
             
             /* Animation definition */
-            animation: rotate-gradient 3s linear infinite;
+            animation: rotate-gradient 4s linear infinite;
             
             /* Hide by default, then fade in smoothly on hover */
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease-out;
         }
 
-        /* 4. On hover, reveal the animated border */
+        /* 3. This pseudo-element acts as a mask, covering the center of the gradient */
+        /* This creates the border effect. */
+        .feature-card::after,
+        .benefit::after,
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            z-index: -1; /* Positioned on top of the gradient, but behind the card's content */
+            left: 3px;   /* This value determines the border thickness */
+            top: 3px;    /* This value determines the border thickness */
+            width: calc(100% - 6px);  /* 100% minus double the border thickness */
+            height: calc(100% - 6px); /* 100% minus double the border thickness */
+            
+            /* IMPORTANT: This should match the background color of your cards. */
+            /* I'm assuming a light background color here. Change if your cards are dark. */
+            background: #fff; 
+            
+            border-radius: 13px; /* Parent radius (16px) minus border thickness (3px) */
+            
+            /* Hide by default, then fade in smoothly on hover */
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+
+
+        /* 4. On hover, reveal both pseudo-elements to create the effect */
         .feature-card:hover::before,
         .benefit:hover::before,
-        .cta-button:hover::before {
+        .cta-button:hover::before,
+        .feature-card:hover::after,
+        .benefit:hover::after,
+        .cta-button:hover::after {
             opacity: 1;
         }
 
