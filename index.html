@@ -7,145 +7,105 @@
     <meta name="description" content="Track your eco-friendly transportation choices, earn points for sustainable travel, and save on road tax with EcoMiles.">
     <link rel="stylesheet" href="css/styles.css">
 <style>
-        /*
-        The animations defined in your previously provided CSS file are already quite comprehensive.
-        I'm adding some specific animation delays here to ensure a staggered effect for the landing page elements.
-        Make sure the 'styles.css' file contains all the @keyframes for 'fadeIn', 'slideUp', etc.,
-        as provided in your initial CSS input.
-        */
-
-        /* Hero Section Animations */
-        .hero h2 {
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0; /* Start hidden */
-            animation-delay: 0.2s;
+        /* Base styles from previous context */
+        body { font-family: sans-serif; margin: 0; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hero { text-align: center; padding-top: 40px; padding-bottom: 40px; }
+        .features-grid, .benefits-grid { display: grid; gap: 20px; margin-top: 40px; }
+        @media (min-width: 768px) {
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+            .benefits-grid { grid-template-columns: repeat(4, 1fr); }
         }
+        .cta-button { text-decoration: none; display: inline-block; margin-top: 20px; }
+        .logo h1 { margin: 0; }
+        .navbar { padding: 10px 0; }
+        .cta-section h3 { margin-bottom: 10px;}
+        .cta-section .cta-subtitle { margin-top: 5px; margin-bottom: 20px; }
+        /* --- End of Base Styles --- */
 
-        .hero-subtitle {
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            animation-delay: 0.4s;
-        }
+        /* --- Styles for Rotating Border on Hover --- */
 
-        /* Features Grid Staggered Animation (already defined in your CSS but re-emphasizing) */
-        .features-grid .feature-card {
-            animation: slideUp 0.6s ease-out forwards;
-            opacity: 0; /* Start hidden */
-        }
-        .features-grid .feature-card:nth-child(1) { animation-delay: 0.6s; }
-        .features-grid .feature-card:nth-child(2) { animation-delay: 0.7s; }
-        .features-grid .feature-card:nth-child(3) { animation-delay: 0.8s; }
-        .features-grid .feature-card:nth-child(4) { animation-delay: 0.9s; }
-        .features-grid .feature-card:nth-child(5) { animation-delay: 1.0s; }
-        .features-grid .feature-card:nth-child(6) { animation-delay: 1.1s; }
-
-
-        /* CTA Section Animation */
-        .cta-section {
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            animation-delay: 1.3s;
-        }
-
-        /* Benefits Section Staggered Animation */
-        .benefits h2 {
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            animation-delay: 1.5s;
-        }
-
-        .benefits-grid .benefit {
-            animation: slideUp 0.6s ease-out forwards;
-            opacity: 0; /* Start hidden */
-        }
-        .benefits-grid .benefit:nth-child(1) { animation-delay: 1.7s; }
-        .benefits-grid .benefit:nth-child(2) { animation-delay: 1.8s; }
-        .benefits-grid .benefit:nth-child(3) { animation-delay: 1.9s; }
-        .benefits-grid .benefit:nth-child(4) { animation-delay: 2.0s; }
-
-        /* --- Styles for Rainbow Hover Effect --- */
-
-        /* 1. Change cursor and set up positioning context */
+        /* 1. Setup the container for the animation */
         .feature-card, .benefit, .cta-button {
-            cursor: pointer;
-            position: relative; /* Required for pseudo-elements */
+            position: relative;
             z-index: 0;
-            border-radius: 16px; /* A nice, modern radius for the effect */
-            overflow: hidden; /* Keeps the effect contained */
+            overflow: hidden;
+            border-radius: 16px;
+            cursor: pointer;
+            padding: 3px;
+            background: transparent;
         }
+        .cta-button { padding: 0; }
 
-        /* 2. This is the animated gradient that will form the border */
+        /* 2. The rotating pseudo-element with a new conic gradient */
         .feature-card::before,
         .benefit::before,
         .cta-button::before {
-            content: '';
+            content: "";
             position: absolute;
-            z-index: -2; /* Positioned behind the card's background mask */
-            left: -50%;
+            z-index: -1;
             top: -50%;
+            left: -50%;
             width: 200%;
             height: 200%;
-            /* This gradient is now mostly transparent, creating a single "comet" of color */
+            /* Vibrant, multi-color rainbow gradient */
             background: conic-gradient(
-                from 180deg at 50% 50%,
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0) 70%, /* Majority is transparent */
-                #00B2FF 80%, /* Start of the color arc */
-                #8338EC 90%, 
-                #FF007A 100% /* End of the color arc */
+                #FF007A, #F48C06, #F9DC5C, #00F5D4, #00B2FF, #8338EC, #FF007A
             );
-            
-            /* Animation definition */
-            animation: rotate-gradient 4s linear infinite;
-            
-            /* Hide by default, then fade in smoothly on hover */
+            animation: rotate 4s linear infinite;
+            /* Animation is paused and invisible by default */
+            animation-play-state: paused;
             opacity: 0;
             transition: opacity 0.4s ease-out;
         }
 
-        /* 3. This pseudo-element acts as a mask, covering the center of the gradient */
-        /* This creates the border effect. */
-        .feature-card::after,
-        .benefit::after,
-        .cta-button::after {
-            content: '';
-            position: absolute;
-            z-index: -1; /* Positioned on top of the gradient, but behind the card's content */
-            left: 3px;   /* This value determines the border thickness */
-            top: 3px;    /* This value determines the border thickness */
-            width: calc(100% - 6px);  /* 100% minus double the border thickness */
-            height: calc(100% - 6px); /* 100% minus double the border thickness */
-            
-            /* IMPORTANT: This should match the background color of your cards. */
-            /* I'm assuming a light background color here. Change if your cards are dark. */
-            background: #fff; 
-            
-            border-radius: 13px; /* Parent radius (16px) minus border thickness (3px) */
-            
-            /* Hide by default, then fade in smoothly on hover */
-            opacity: 0;
-            transition: opacity 0.4s ease-out;
-        }
-
-
-        /* 4. On hover, reveal both pseudo-elements to create the effect */
+        /* 3. On hover, fade in the pseudo-element and start the animation */
         .feature-card:hover::before,
         .benefit:hover::before,
-        .cta-button:hover::before,
-        .feature-card:hover::after,
-        .benefit:hover::after,
-        .cta-button:hover::after {
+        .cta-button:hover::before {
+            animation-play-state: running;
             opacity: 1;
         }
 
-        /* 5. Keyframes for the rotation animation */
-        @keyframes rotate-gradient {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+        /* 4. The inner element that masks the animation */
+        .feature-card .inner, .benefit .inner, .cta-button .inner {
+            position: relative;
+            z-index: 1;
+            background: #fff; /* Match your page's background or desired card color */
+            border-radius: 13px;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        
+        .cta-button .inner {
+            display: block;
+            padding: 12px 24px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 5. The rotation animation keyframes */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Styles for Scroll-Triggered Animations --- */
+        
+        /* Initial state of the elements to be animated */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform; /* Performance optimization */
+        }
+        
+        /* Final state when the element becomes visible */
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
