@@ -62,6 +62,54 @@
         .benefits-grid .benefit:nth-child(2) { animation-delay: 1.8s; }
         .benefits-grid .benefit:nth-child(3) { animation-delay: 1.9s; }
         .benefits-grid .benefit:nth-child(4) { animation-delay: 2.0s; }
+
+        /* Rainbow Animation for CTA Buttons */
+        .cta-button {
+            position: relative; /* Needed for pseudo-element positioning */
+            overflow: hidden; /* Hide overflow of the rainbow */
+            z-index: 1; /* Ensure button content is above rainbow */
+            transition: color 0.4s ease-in-out; /* Smooth text color change */
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                #ff0000, /* Red */
+                #ff7f00, /* Orange */
+                #ffff00, /* Yellow */
+                #00ff00, /* Green */
+                #0000ff, /* Blue */
+                #4b0082, /* Indigo */
+                #9400d3, /* Violet */
+                #ff0000 /* Back to Red to complete the circle */
+            );
+            border-radius: 50%; /* Make it round */
+            z-index: -1; /* Place behind button text */
+            transition: transform 0.8s ease-in-out; /* Smooth transform */
+            transform: scale(0); /* Start hidden */
+            opacity: 0; /* Start invisible */
+        }
+
+        .cta-button:hover::before {
+            transform: scale(1); /* Expand on hover */
+            opacity: 1; /* Become visible on hover */
+            animation: rotateRainbow 2s linear infinite; /* Start rotating animation */
+        }
+
+        /* You might want to change the text color on hover for better contrast */
+        .cta-button:hover {
+            color: white; /* Example: change text to white on hover */
+        }
+
+        @keyframes rotateRainbow {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -70,7 +118,7 @@
             <div class="nav-container">
                 <div class="logo">
                     <h1>🌱 EcoMiles</h1>
-                 </div>
+                </div>
             </div>
         </nav>
     </header>
